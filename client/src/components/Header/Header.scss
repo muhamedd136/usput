@@ -1,0 +1,80 @@
+.header {
+  color: #b3e2dc;
+
+  .navBase-logo {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  > nav {
+    box-shadow: 0px 1px 30px grey;
+  }
+  a {
+    outline: none;
+  }
+  .sign_out-mobile,
+  .sign_out-desktop {
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .active {
+    color: teal !important;
+    font-weight: 500;
+  }
+
+  .nav-link:hover {
+    color: teal !important;
+    font-weight: bold;
+  }
+
+  .sign_out-mobile {
+    color: teal !important;
+  }
+
+  .sign_out-desktop {
+    display: none;
+    color: teal;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #b3e2dc;
+      color: black !important;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .navBase {
+      width: 75%;
+    }
+
+    .sign_out-desktop {
+      display: inline;
+    }
+    .sign_out-mobile {
+      display: none;
+    }
+
+    .searchUsers {
+      position: relative;
+      width: 40%;
+      margin: 0 auto;
+      left: 0 !important;
+    }
+  }
+}
+
+.signout_modal {
+  .modal-header {
+    font-size: 18px;
+    font-weight: 600;
+  }
+}

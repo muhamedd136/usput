@@ -6,19 +6,19 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import "./OfferCard.scss";
 
-const OfferCard = props => {
+const OfferCard = (props) => {
   const {
-    id,
-    userId,
-    name,
-    username,
-    price,
-    created,
     startingLocation,
+    updateOfferList,
     endingLocation,
-    status,
     isRemoved,
-    updateOfferList
+    username,
+    created,
+    userId,
+    status,
+    price,
+    name,
+    id,
   } = props;
 
   const [deleteModalShow, setDeleteModalShow] = useState(false);
@@ -32,14 +32,14 @@ const OfferCard = props => {
     startingLocation: startingLocation,
     endingLocation: endingLocation,
     status: status,
-    isRemoved: false
+    isRemoved: false,
   });
   const [isEmpty, setIsEmpty] = useState(false);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setEditOfferData({
       ...editOfferData,
-      [event.target.name]: [event.target.value]
+      [event.target.name]: [event.target.value],
     });
   };
 
@@ -88,7 +88,7 @@ const OfferCard = props => {
         endingLocation: endingLocation,
         appliedDate: Date.now(),
         status: status,
-        isRemoved: isRemoved
+        isRemoved: isRemoved,
       })
       .then(() => {
         console.log("Successfuly applied to an offer");
@@ -108,7 +108,7 @@ const OfferCard = props => {
         startingLocation: startingLocation,
         endingLocation: endingLocation,
         status: status,
-        isRemoved: true
+        isRemoved: true,
       })
       .then(() => {
         console.log("Offer successfuly deleted.");
@@ -254,8 +254,8 @@ const OfferCard = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateOfferList: () => dispatch(updateOfferList())
+const mapDispatchToProps = (dispatch) => ({
+  updateOfferList: () => dispatch(updateOfferList()),
 });
 
 export default connect(null, mapDispatchToProps)(OfferCard);

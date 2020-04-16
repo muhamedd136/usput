@@ -1,13 +1,13 @@
 import { Button, Spinner } from "react-bootstrap";
 import React, { useState } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import auth from "../../api/auth";
 import "./Login.scss";
 
-const Login = props => {
+const Login = (props) => {
   const [loginData, setLoginData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   const { username, password } = loginData;
@@ -16,10 +16,10 @@ const Login = props => {
   const [isFilled, setIsFilled] = useState(true);
   const [isIncorrect, setIsIncorrect] = useState(false);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setLoginData({
       ...loginData,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -33,13 +33,13 @@ const Login = props => {
 
     await auth
       .login(loginData)
-      .then(response => {
+      .then((response) => {
         localStorage.setItem("access_token", response.data.jwt);
         localStorage.setItem("user_cache", JSON.stringify(response.data.user));
         setIsLoading(false);
         setLoginData({
           username: "",
-          password: ""
+          password: "",
         });
         props.history.push("/profile");
       })
@@ -47,7 +47,7 @@ const Login = props => {
         setIsLoading(false);
         setLoginData({
           username: "",
-          password: ""
+          password: "",
         });
         setIsIncorrect(true);
       });
