@@ -67,37 +67,13 @@ let member_router = express.Router();
 require("./routes/member")(member_router, db, mongojs, jwt, config);
 app.use("/member", member_router);
 
+/** Stores */
+const userStore = require("./stores/UsersStore");
+
 /** Login and register */
+
 app.post("/login", async (req, res) => {
-  try {
-    let jwtToken;
-
-    await db.users.findOne({ username: req.body.username }, (err, doc) => {
-      if (!doc) {
-        return res.status(403).send({ message: "Incorrect username." });
-      } else if (doc.password != req.body.password) {
-        return res.status(403).send({ message: "Incorrect password." });
-      } else {
-        jwtToken = jwt.sign(
-          {
-            id: doc._id,
-            username: doc.username,
-            type: doc.type,
-            exp: Math.floor(Date.now() / 1000) + 3600,
-          },
-          process.env.JWT_SECRET || config.JWT_SECRET,
-          { algorithm: "HS256" }
-        );
-
-        res.send({
-          user: doc,
-          jwt: jwtToken,
-        });
-      }
-    });
-  } catch (err) {
-    res.status(400).send(`Error: ${error}`);
-  }
+  userStore.login(req, res, db, jwt, config);
 });
 
 /** Listener  */
