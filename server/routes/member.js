@@ -56,4 +56,38 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	router.get("/offers", (req, res) => {
 		offerStore.get_offers(req, res);
 	});
+
+	/**
+	 * @swagger
+	 * /member/offers/{user_id}:
+	 *   get:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Get all offers by user id
+	 *     parameters:
+	 *       - name: user_id
+	 *         in: path
+	 *         description: ID of the user
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *       - name: offset
+	 *         in: query
+	 *         description: The offset of the store list.
+	 *         type: integer
+	 *         default: 0
+	 *       - name: limit
+	 *         in: query
+	 *         description: The limit of the store list.
+	 *         type: integer
+	 *         default: 5
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.get("/offers/:userId", (req, res) => {
+		offerStore.get_user_offers(req, res);
+	});
 };
