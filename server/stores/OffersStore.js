@@ -1,5 +1,7 @@
-class OfferStore {
+const BaseStore = require("../stores/BaseStore.js");
+class OfferStore extends BaseStore {
 	constructor(db, mongojs, currentUser) {
+		super(db);
 		this.db = db;
 		this.currentUser = currentUser;
 		this.mongojs = mongojs;
@@ -48,7 +50,7 @@ class OfferStore {
 			if (error) {
 				throw error;
 			}
-			createLog(docs.username, "created", "offer");
+			super.createLog(docs.username, "created", "offer");
 			res.json(docs);
 		});
 	}
@@ -78,7 +80,28 @@ class OfferStore {
 					throw error;
 				}
 
-				createLog(docs.username, "updated", `offer ${docs.name}`);
+				super.createLog(docs.username, "updated", `offer ${docs.name}`);
+				res.json(docs);
+			}
+		);
+	}
+
+	delete_offer(req, res) {
+		let id = req.params.id;
+		let offerBody = req.body;
+
+		this.db.offers.findAndModify(
+			{
+				query: { _id: this.mongojs.ObjectId(id) },
+				update: { $set: offerBody },
+				new: true,
+			},
+			(error, docs) => {
+				if (error) {
+					throw error;
+				}
+
+				super.createLog(docs.username, "deleted", `offer ${docs.name}`);
 				res.json(docs);
 			}
 		);
