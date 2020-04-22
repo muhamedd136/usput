@@ -202,6 +202,34 @@ module.exports = (router, db, mongojs, jwt, config) => {
 
 	/**
 	 * @swagger
+	 * /member/logs:
+	 *   get:
+	 *     tags:
+	 *       - Logs
+	 *     name: Logs
+	 *     summary: Get all logs
+	 *     parameters:
+	 *       - name: offset
+	 *         in: query
+	 *         description: The offset of the store list.
+	 *         type: integer
+	 *         default: 0
+	 *       - name: limit
+	 *         in: query
+	 *         description: The limit of the store list.
+	 *         type: integer
+	 *         default: 5
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.get("/logs", (req, res) => {
+		logStore.get_logs(req, res);
+	});
+
+	/**
+	 * @swagger
 	 * /member/logs/{user_id}:
 	 *   get:
 	 *     tags:
@@ -231,6 +259,6 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	 *       - application/json
 	 */
 	router.get("/logs/:username", (req, res) => {
-		logStore.get_user_log(req, res);
+		logStore.get_user_logs(req, res);
 	});
 };

@@ -7,7 +7,7 @@ class LogStore extends BaseStore {
 		this.mongojs = mongojs;
 	}
 
-	get_user_log(req, res) {
+	get_user_logs(req, res) {
 		let username = req.params.username;
 		let limit = Number(req.query.limit) || 5;
 		let offset = Number(req.query.offset) || 0;
@@ -20,6 +20,23 @@ class LogStore extends BaseStore {
 				if (err) {
 					console.log(err.errmsg);
 				}
+				res.json(docs);
+			});
+	}
+
+	get_logs(req, res) {
+		let limit = Number(req.query.limit) || 5;
+		let offset = Number(req.query.offset) || 0;
+
+		this.db.logs
+			.find({})
+			.sort({ created: -1 })
+			.skip(offset)
+			.limit(limit, (error, docs) => {
+				if (error) {
+					throw error;
+				}
+
 				res.json(docs);
 			});
 	}
