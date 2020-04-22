@@ -1,5 +1,6 @@
 module.exports = (router, db, mongojs, jwt, config) => {
 	const OfferStore = require("../stores/OffersStore.js");
+	const LogStore = require("../stores/LogsStore.js");
 	let currentUser;
 
 	router.use((req, res, next) => {
@@ -26,6 +27,8 @@ module.exports = (router, db, mongojs, jwt, config) => {
 			res.status(401).send("Unauthorized access.");
 		}
 	});
+
+	/* OFFER ROUTES */
 
 	const offerStore = new OfferStore(db, mongojs, currentUser);
 
@@ -191,5 +194,43 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	 */
 	router.put("/offers/delete/:id", (req, res) => {
 		offerStore.delete_offer(req, res);
+	});
+
+	/* LOG ROUTES */
+
+	const logStore = new LogStore(db, mongojs, currentUser);
+
+	/**
+	 * @swagger
+	 * /member/logs/{user_id}:
+	 *   get:
+	 *     tags:
+	 *       - Logs
+	 *     name: Logs
+	 *     summary: Get all logs by user id
+	 *     parameters:
+	 *       - name: user_id
+	 *         in: path
+	 *         description: ID of the user
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *       - name: offset
+	 *         in: query
+	 *         description: The offset of the store list.
+	 *         type: integer
+	 *         default: 0
+	 *       - name: limit
+	 *         in: query
+	 *         description: The limit of the store list.
+	 *         type: integer
+	 *         default: 5
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.get("/logs/:username", (req, res) => {
+		logStore.get_user_log(req, res);
 	});
 };
