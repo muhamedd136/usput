@@ -168,4 +168,28 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	router.put("/offers/:offerId", (req, res) => {
 		offerStore.update_offer(req, res);
 	});
+
+	/**
+	 * @swagger
+	 * /member/offers/delete/{offer_id}:
+	 *   delete:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Delete offer by offer id
+	 *     parameters:
+	 *       - name: offer_id
+	 *         in: path
+	 *         description: ID of the offer
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.put("/offers/delete/:id", (req, res) => {
+		offerStore.delete_offer(req, res);
+	});
 };
