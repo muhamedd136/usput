@@ -27,7 +27,7 @@ module.exports = (router, db, mongojs, jwt, config) => {
 		}
 	});
 
-	const offerStore = new OfferStore(db, currentUser);
+	const offerStore = new OfferStore(db, mongojs, currentUser);
 
 	/**
 	 * @swagger
@@ -89,5 +89,107 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	 */
 	router.get("/offers/:userId", (req, res) => {
 		offerStore.get_user_offers(req, res);
+	});
+
+	/**
+	 * @swagger
+	 * /member/offers:
+	 *   post:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Create an offer
+	 *     parameters:
+	 *       - name: body
+	 *         in: body
+	 *         description: offer information
+	 *         required: true
+	 *         type: object
+	 *         example: { userId: "", username: "", name: "", price: 0, created: 0, startingLocation: "", endingLocation: "", status: "open", isRemoved: false }
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.post("/offers", (req, res) => {
+		offerStore.post_offer(req, res);
+	});
+
+	/**
+	 * @swagger
+	 * /member/offers/find/{offer_id}:
+	 *   get:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Get offer by offer id
+	 *     parameters:
+	 *       - name: offer_id
+	 *         in: path
+	 *         description: ID of the offer
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.get("/offers/find/:id", (req, res) => {
+		offerStore.get_offer_by_id(req, res);
+	});
+
+	/**
+	 * @swagger
+	 * /member/offers/{offer_id}:
+	 *   put:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Update offer by offer id
+	 *     parameters:
+	 *       - name: offer_id
+	 *         in: path
+	 *         description: ID of the offer
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *       - name: body
+	 *         in: body
+	 *         description: offer information
+	 *         required: true
+	 *         type: object
+	 *         example: { userId: "", username: "", name: "", price: 0, created: 0, startingLocation: "", endingLocation: "", status: "", isRemoved: false }
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.put("/offers/:offerId", (req, res) => {
+		offerStore.update_offer(req, res);
+	});
+
+	/**
+	 * @swagger
+	 * /member/offers/delete/{offer_id}:
+	 *   delete:
+	 *     tags:
+	 *       - Offers
+	 *     name: Offers
+	 *     summary: Delete offer by offer id
+	 *     parameters:
+	 *       - name: offer_id
+	 *         in: path
+	 *         description: ID of the offer
+	 *         required: true
+	 *         type: string
+	 *         default: '5dc82504ff68bc92ad7bff63'
+	 *     security:
+	 *       - bearerAuth: []
+	 *     produces:
+	 *       - application/json
+	 */
+	router.put("/offers/delete/:id", (req, res) => {
+		offerStore.delete_offer(req, res);
 	});
 };
