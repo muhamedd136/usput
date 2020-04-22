@@ -1,5 +1,6 @@
 module.exports = (router, db, mongojs, jwt, config) => {
-	const offerStore = require("../stores/OffersStore.js");
+	const OfferStore = require("../stores/OffersStore.js");
+	let currentUser;
 
 	router.use((req, res, next) => {
 		console.log(`Member route accessed by: ${req.ip}`);
@@ -26,6 +27,8 @@ module.exports = (router, db, mongojs, jwt, config) => {
 		}
 	});
 
+	const offerStore = new OfferStore(db, currentUser);
+
 	/**
 	 * @swagger
 	 * /member/offers:
@@ -51,6 +54,6 @@ module.exports = (router, db, mongojs, jwt, config) => {
 	 *       - application/json
 	 */
 	router.get("/offers", (req, res) => {
-		offerStore.get_offers(req, res, db, currentUser);
+		offerStore.get_offers(req, res);
 	});
 };
