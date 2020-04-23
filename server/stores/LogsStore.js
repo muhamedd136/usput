@@ -2,9 +2,15 @@ const BaseStore = require("../stores/BaseStore.js");
 class LogStore extends BaseStore {
 	constructor(db, mongojs, currentUser) {
 		super(db);
+		if (!!LogStore.instance) {
+			return LogStore.instance;
+		}
+
+		LogStore.instance = this;
 		this.db = db;
 		this.currentUser = currentUser;
 		this.mongojs = mongojs;
+		return this;
 	}
 
 	get_user_logs(req, res) {

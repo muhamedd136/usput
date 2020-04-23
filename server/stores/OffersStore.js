@@ -2,9 +2,16 @@ const BaseStore = require("../stores/BaseStore.js");
 class OfferStore extends BaseStore {
 	constructor(db, mongojs, currentUser) {
 		super(db);
+		if (!!OfferStore.instance) {
+			return OfferStore.instance;
+		}
+
+		OfferStore.instance = this;
 		this.db = db;
 		this.currentUser = currentUser;
 		this.mongojs = mongojs;
+
+		return this;
 	}
 
 	get_offers(req, res) {
