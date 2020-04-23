@@ -68,12 +68,16 @@ require("./routes/member")(member_router, db, mongojs, jwt, config);
 app.use("/member", member_router);
 
 /** Stores */
-const userStore = require("./stores/UsersStore");
+const UsersStore = require("./stores/UsersStore");
+const usersStore = new UsersStore(db, mongojs, jwt, config);
 
 /** Login and register */
+app.post("/login", (req, res) => {
+  usersStore.login(req, res);
+});
 
-app.post("/login", async (req, res) => {
-  userStore.login(req, res, db, jwt, config);
+app.post("/register", (req, res) => {
+  usersStore.register(req, res);
 });
 
 /** Listener  */
