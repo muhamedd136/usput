@@ -1,35 +1,16 @@
 import { BASE_URL } from "../shared/utils";
-import axios from "axios";
+import { customAxios } from ".";
 
 export default {
-  create: (body) =>
-    axios.post(`${BASE_URL}/member/offers`, body, {
-      headers: {
-        Authorization: localStorage.getItem("access_token"),
-      },
-    }),
+  create: (body) => customAxios.post(`${BASE_URL}/member/offers`, body),
   search: (limit, offset) =>
-    axios.get(`${BASE_URL}/member/offers?limit=${limit}&offset=${offset}`, {
-      headers: {
-        Authorization: localStorage.getItem("access_token"),
-      },
-    }),
+    customAxios.get(
+      `${BASE_URL}/member/offers?limit=${limit}&offset=${offset}`
+    ),
   searchLogs: (limit, offset) =>
-    axios.get(`${BASE_URL}/member/logs?limit=${limit}&offset=${offset}`, {
-      headers: {
-        Authorization: localStorage.getItem("access_token"),
-      },
-    }),
+    customAxios.get(`${BASE_URL}/member/logs?limit=${limit}&offset=${offset}`),
   update: (offerId, body) =>
-    axios.put(`${BASE_URL}/member/offers/${offerId}`, body, {
-      headers: {
-        Authorization: localStorage.getItem("access_token"),
-      },
-    }),
+    customAxios.put(`${BASE_URL}/member/offers/${offerId}`, body),
   delete: (offerId, body) =>
-    axios.put(`${BASE_URL}/member/offers/delete/${offerId}`, body, {
-      headers: {
-        Authorization: localStorage.getItem("access_token"),
-      },
-    }),
+    customAxios.put(`${BASE_URL}/member/offers/delete/${offerId}`, body),
 };
