@@ -3,11 +3,12 @@ const jwt = require("jsonwebtoken");
 const express = require("express");
 const mongojs = require("mongojs");
 const cors = require("cors");
+const path = require("path");
 
 /* Configuration import */
 let config;
 if (!process.env.HEROKU) {
-  config = require("./config");
+	config = require("./config");
 }
 
 const app = express();
@@ -22,8 +23,8 @@ app.use(cors());
 
 /* Global middleware */
 app.use((req, res, next) => {
-  console.log("Server time: ", Date.now());
-  next();
+	console.log("Server time: ", Date.now());
+	next();
 });
 
 const swaggerJSDoc = require("swagger-jsdoc");
@@ -31,32 +32,32 @@ const swaggerUi = require("swagger-ui-express");
 
 /** Swagger setup */
 const swaggerDefinition = {
-  info: {
-    title: "usput Swagger API Documentation",
-    version: "1.0.0",
-  },
-  host: process.env.SWAGGER_HOST || config.SWAGGER_HOST,
-  basePath: "/",
-  securityDefinitions: {
-    bearerAuth: {
-      type: "apiKey",
-      name: "Authorization",
-      scheme: "bearer",
-      in: "header",
-    },
-  },
+	info: {
+		title: "usput Swagger API Documentation",
+		version: "1.0.0",
+	},
+	host: process.env.SWAGGER_HOST || config.SWAGGER_HOST,
+	basePath: "/",
+	securityDefinitions: {
+		bearerAuth: {
+			type: "apiKey",
+			name: "Authorization",
+			scheme: "bearer",
+			in: "header",
+		},
+	},
 };
 
 const options = {
-  swaggerDefinition,
-  apis: ["./index.js", "./routes/*.js"],
+	swaggerDefinition,
+	apis: ["./index.js", "./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
 app.get("/swagger.json", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.send(swaggerSpec);
+	res.setHeader("Content-Type", "application/json");
+	res.send(swaggerSpec);
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -73,14 +74,23 @@ const usersStore = new UsersStore(db, mongojs, jwt, config);
 
 /** Login and register */
 app.post("/login", (req, res) => {
-  usersStore.login(req, res);
+	usersStore.login(req, res);
 });
 
 app.post("/register", (req, res) => {
-  usersStore.register(req, res);
+	usersStore.register(req, res);
+});
+
+app.use("/", express.static("./../client/build"));
+app.get("/*", function (req, res) {
+	res.sendFile(path.join(__dirname, "./../client/build/index.html"), function (err) {
+		if (err) {
+			res.status(500).send(err);
+		}
+	});
 });
 
 /** Listener  */
 app.listen(port, () => {
-  console.log("Server listening on port: " + port);
+	console.log("Server listening on port: " + port);
 });
