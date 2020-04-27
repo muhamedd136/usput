@@ -31,7 +31,7 @@ class UsersStore extends BaseStore {
 							id: doc._id,
 							username: doc.username,
 							type: doc.type,
-							exp: Math.floor(Date.now() / 1000) + 3600,
+							//exp: Math.floor(Date.now() / 1000) + 3600,
 						},
 						process.env.JWT_SECRET || this.config.JWT_SECRET,
 						{ algorithm: "HS256" }
