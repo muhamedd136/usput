@@ -9,7 +9,7 @@ describe("Test the API for getting all offers", () => {
 				"Authorization",
 				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlMWIzNDc4NDNiZDQ0NTAxOGVlMTNiYSIsInVzZXJuYW1lIjoibXUiLCJ0eXBlIjoiTWVtYmVyIiwiaWF0IjoxNTg3OTk3MDE5fQ.ipstY8N7CqSTEbSoxkqwst_7uRmB7b8CNznJ_1NpGEY"
 			);
-		json_res = JSON.parse(response.text);
+		json_res = response.body;
 		expect(response.statusCode).toBe(200);
 		expect(json_res.length).toBe(5);
 	});
@@ -23,7 +23,7 @@ describe("Test the API for getting a offer by id", () => {
 				"Authorization",
 				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlMWIzNDc4NDNiZDQ0NTAxOGVlMTNiYSIsInVzZXJuYW1lIjoibXUiLCJ0eXBlIjoiTWVtYmVyIiwiaWF0IjoxNTg3OTk3MDE5fQ.ipstY8N7CqSTEbSoxkqwst_7uRmB7b8CNznJ_1NpGEY"
 			);
-		json_res = JSON.parse(response.text);
+		json_res = response.body;
 		expect(response.statusCode).toBe(200);
 		expect(json_res.username).toBe("muhakng");
 		expect(json_res.price[0]).toBe("5");

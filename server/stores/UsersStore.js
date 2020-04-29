@@ -68,7 +68,7 @@ class UsersStore extends BaseStore {
 						if (error) {
 							return res.status(400).send(`Insertion failed! Reason: ${error.errmsg}`);
 						}
-						res.json(docs);
+						res.json(response);
 					}
 				);
 			});

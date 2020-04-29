@@ -9,8 +9,7 @@ describe("Test the API for getting all requested orders for user", () => {
 				"Authorization",
 				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlMWIzNDc4NDNiZDQ0NTAxOGVlMTNiYSIsInVzZXJuYW1lIjoibXUiLCJ0eXBlIjoiTWVtYmVyIiwiaWF0IjoxNTg3OTk3MDE5fQ.ipstY8N7CqSTEbSoxkqwst_7uRmB7b8CNznJ_1NpGEY"
 			);
-		json_res = JSON.parse(response.text)[0];
-		console.log(json_res);
+		json_res = response.body[0];
 		expect(response.statusCode).toBe(200);
 		expect(json_res.offerName[0]).toBe("muhamed 2");
 		expect(json_res.offerPrice[0]).toBe("2");
