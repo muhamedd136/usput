@@ -40,10 +40,10 @@ will be on NodeJS using ExpressJS and database will be MongoDB.
 Main goal of this project was to showcase different architectural and design patterns. For us, the most
 logical architectural pattern to choose was 3 Layer Architecture:
 
-    1. Presentation Layer - [Frontend part of the project](./client)
-    2. Business Logic Layer - [Backend part of the project](./server)
-    3. Data (Access) Layer - Database part of the project (this is not represented in code because we have
-    setup out database on MongoDB Atlas and implemented using mongojs library)
+1. Presentation Layer - [Frontend part of the project](./client)
+2. Business Logic Layer - [Backend part of the project](./server)
+3. Data (Access) Layer - Database part of the project (this is not represented in code because we have
+   setup out database on MongoDB Atlas and implemented using mongojs library)
 
 Regarding design patterns, for us was important to showcase one on each side of code, server and client side.
 Having that in mind, on client side we have choosen to implement Adapter Design pattern with our API calls.
