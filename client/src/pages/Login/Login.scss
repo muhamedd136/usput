@@ -1,0 +1,87 @@
+.Login {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+
+  .LoginLayout-left {
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .Login-header {
+      font-size: 32px;
+      font-weight: bold;
+      color: teal;
+    }
+
+    .Login-form {
+      padding: 15px;
+      width: 70%;
+    }
+
+    .Input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Input-label {
+      color: teal;
+      font-weight: bold;
+    }
+
+    .Input-input {
+      padding: 5px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      border-color: teal;
+      margin-bottom: 15px;
+      outline: none;
+    }
+
+    .Buttons-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      outline: none;
+    }
+
+    .Login-fail {
+      color: red;
+    }
+  }
+
+  .LoginLayout-right {
+    height: 100vh;
+    background-color: teal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .Login-banner {
+      font-size: 40px;
+      font-weight: bold;
+      color: white;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .Login {
+    .LoginLayout-left {
+      height: 80vh;
+
+      .Login-form {
+        width: 100%;
+      }
+    }
+
+    .LoginLayout-right {
+      height: 20vh;
+    }
+  }
+}

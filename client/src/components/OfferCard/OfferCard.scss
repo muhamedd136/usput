@@ -1,0 +1,58 @@
+.OfferCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 1% 15px 1%;
+  padding: 5px 20px;
+  width: 98%;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: rgba(179, 226, 220, 0.2);
+
+  span {
+    font-weight: bold;
+  }
+
+  .OfferCard-firstRow {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .OfferCard-secondRow {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .OfferCard-thirdRow {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .OfferCard-buttons {
+    > button {
+      margin-left: 5px;
+    }
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .OfferCard {
+    .OfferCard-firstRow {
+      display: unset;
+    }
+
+    .OfferCard-secondRow {
+      display: unset;
+    }
+
+    .OfferCard-thirdRow {
+      display: unset;
+    }
+  }
+}

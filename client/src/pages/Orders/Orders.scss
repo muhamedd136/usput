@@ -1,0 +1,42 @@
+.Orders {
+  padding: 30px 20px;
+  height: calc(100vh - 56px);
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .Orders-cardContainer {
+    padding: 20px;
+  }
+
+  .Orders-Card {
+    height: calc(100vh - 133px);
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .Orders-CardButtons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .Orders-OrderCards {
+    padding: 5px;
+    height: calc(100vh - 173px);
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .Orders {
+    .Orders-OrderCards {
+      height: calc(100vh - 245px);
+    }
+  }
+}

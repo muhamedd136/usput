@@ -1,31 +1,42 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "Deliver packages safely and for cheap.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/muhamedd136/usput.git"
-  },
-  "keywords": [],
-  "author": "Muhamed Delihasanovic & Aldin Berisa",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/muhamedd136/usput/issues"
-  },
-  "homepage": "https://github.com/muhamedd136/usput#readme",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongojs": "^3.1.0",
-    "nodemon": "^2.0.3",
-    "swagger-jsdoc": "^4.0.0",
-    "swagger-ui-express": "^4.1.4"
-  }
+	"name": "server",
+	"version": "1.0.0",
+	"description": "Deliver packages safely and for cheap.",
+	"main": "index.js",
+	"scripts": {
+		"test": "jest",
+		"start": "node index.js"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"coveragePathIgnorePatterns": [
+			"/node_modules/"
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/muhamedd136/usput.git"
+	},
+	"keywords": [],
+	"author": "Muhamed Delihasanovic & Aldin Berisa",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/muhamedd136/usput/issues"
+	},
+	"homepage": "https://github.com/muhamedd136/usput#readme",
+	"dependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"jest": "^25.4.0",
+		"jsonwebtoken": "^8.5.1",
+		"mongojs": "^3.1.0",
+		"nodemon": "^2.0.3",
+		"superagent": "^5.2.2",
+		"supertest": "^4.0.2",
+		"swagger-jsdoc": "^4.0.0",
+		"swagger-ui-express": "^4.1.4"
+	}
 }
