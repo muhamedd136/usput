@@ -1,11 +1,11 @@
 import Header from "../../components/Header/Header";
 import Profile from "../../pages/Profile/Profile";
 import { Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Offers from "../../pages/Offers/Offers";
 import Orders from "../../pages/Orders/Orders";
-import React from "react";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import React from "react";
 
 const Routes = () => {
 	return (

@@ -7,13 +7,6 @@ module.exports = (router, db, mongojs, jwt, config) => {
 
 	let currentUser;
 
-	/** Stores */
-	const offerStore = new OfferStore(db, mongojs, currentUser);
-	const transactionStore = new TransactionsStore(db, mongojs);
-	const userStore = new UsersStore(db, mongojs, jwt, config);
-	const logStore = new LogStore(db, mongojs, currentUser);
-	const orderStore = new OrdersStore(db, mongojs);
-
 	/** AUTHENTICATION */
 
 	router.use((req, res, next) => {
@@ -40,6 +33,13 @@ module.exports = (router, db, mongojs, jwt, config) => {
 			res.status(401).send("Unauthorized access.");
 		}
 	});
+
+	/** Stores */
+	const offerStore = new OfferStore(db, mongojs, currentUser);
+	const transactionStore = new TransactionsStore(db, mongojs);
+	const userStore = new UsersStore(db, mongojs, jwt, config);
+	const logStore = new LogStore(db, mongojs, currentUser);
+	const orderStore = new OrdersStore(db, mongojs);
 
 	/* USER ROUTES */
 
