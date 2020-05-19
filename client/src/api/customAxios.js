@@ -13,6 +13,7 @@ const generateClient = () => {
       config.headers = {
         ...config.headers,
         Authorization: getAuthorizationHeader(),
+        "Content-Type": "application/json",
       };
       return config;
     },
@@ -29,3 +30,8 @@ export const customAxios = {
   post: (url, body) => generateClient().post(url, body),
   put: (url, body) => generateClient().put(url, body),
 };
+
+export const authAxios = axios.create({
+  baseURL: baseUrl,
+  headers: { "Content-Type": "application/json" },
+});

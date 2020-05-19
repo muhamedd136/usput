@@ -120,11 +120,11 @@ const Offers = () => {
 		<Form>
 			<Form.Group>
 				<Form.Label>Offer name</Form.Label>
-				<Form.Control type="text" name="name" value={name} onChange={handleChange} />
+				<Form.Control type="text" name="name" placeholder="Offer name" value={name} onChange={handleChange} />
 			</Form.Group>
 			<Form.Group controlId="firstName">
 				<Form.Label>Price</Form.Label>
-				<Form.Control type="number" name="price" value={price} onChange={handleChange} />
+				<Form.Control type="number" name="price" placeholder={0} value={price} onChange={handleChange} />
 			</Form.Group>
 			<Form.Group controlId="lastName">
 				<Form.Label>Starting location</Form.Label>
@@ -171,9 +171,12 @@ const Offers = () => {
 			<div className="col-md-9 offers-cardContainer">
 				<BlockUi tag="div" blocking={stateFetchOffers}>
 					<div className="offers-card">
-						<Button variant="info" onClick={handleModalShow}>
-							Add offer
-						</Button>
+						<div className="offers-headingAndButton">
+							<p className="Card-Heading">Offers</p>
+							<Button variant="info" onClick={handleModalShow}>
+								Add offer
+							</Button>
+						</div>
 						<div className="offers-card scroll" hidden={stateFetchOffers}>
 							{allOffers && allOffers.length > 0
 								? allOffers.map((offer, index) => {
@@ -199,15 +202,18 @@ const Offers = () => {
 				</BlockUi>
 			</div>
 			<div className="col-md-3 offers-cardContainer">
-				<BlockUi tag="div" blocking={stateFetchLogs}>
-					<div className="offers-card scroll" hidden={stateFetchLogs}>
-						{allLogs && allLogs.length > 0
-							? allLogs.map((log, index) => {
-									return <LogCard key={index} message={log.message} created={log.created} />;
-							  })
-							: "No logs available."}
-					</div>
-				</BlockUi>
+				<div className="offers-card">
+					<p className="Card-Heading">User logs</p>
+					<BlockUi tag="div" blocking={stateFetchLogs}>
+						<div className="offers-card scroll" hidden={stateFetchLogs}>
+							{allLogs && allLogs.length > 0
+								? allLogs.map((log, index) => {
+										return <LogCard key={index} message={log.message} created={log.created} />;
+								  })
+								: "No logs available."}
+						</div>
+					</BlockUi>
+				</div>
 			</div>
 		</div>
 	);
