@@ -1,3 +1,4 @@
+import { getSuccessToast, getFailToast } from "../../shared/utils";
 import { updateOfferList } from "../../redux/offers/actions";
 import { Button, Form, Modal } from "react-bootstrap";
 import { getSessionCache } from "../../shared/utils";
@@ -72,11 +73,17 @@ const OfferCard = (props) => {
         .update(id, editOfferData)
         .then(() => {
           console.log("Successfuly updated offer.");
+          getSuccessToast("Successfuly updated offer.");
+          handleEditModalShow();
           updateOfferList();
         })
-        .catch(() => console.log("Could not update offer, please try again."));
+        .catch(() => {
+          getFailToast(
+            "Offer failed to be updated, please contact the administrator."
+          );
+          console.log("Could not update offer, please try again.");
+        });
     }
-    handleEditModalShow();
   };
 
   const applyToOffer = async () => {
@@ -96,10 +103,14 @@ const OfferCard = (props) => {
         isRemoved: isRemoved,
       })
       .then(() => {
-        console.log("Successfuly applied to an offer");
+        getSuccessToast("Successfuly updated offer.");
         updateOfferList();
       })
-      .catch(() => console.log("Can't apply, try again."));
+      .catch(() => {
+        getFailToast(
+          "Failed to apply to offer, please contact the administrator."
+        );
+      });
   };
 
   const deleteOffer = async () => {
@@ -116,11 +127,15 @@ const OfferCard = (props) => {
         isRemoved: true,
       })
       .then(() => {
-        console.log("Offer successfuly deleted.");
+        getSuccessToast("Offer successfuly deleted.");
+        handleDeleteModalShow();
         updateOfferList();
       })
-      .catch(() => console.log("Could not delete offer, try again."));
-    handleDeleteModalShow();
+      .catch(() => {
+        getFailToast(
+          "Failed to delete offer, please contact the administrator."
+        );
+      });
   };
 
   const editOfferFormMarkup = (

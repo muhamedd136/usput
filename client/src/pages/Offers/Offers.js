@@ -5,6 +5,7 @@ import { getSessionCache } from "../../shared/utils";
 import React, { useState, useEffect } from "react";
 import { offer } from "../../api";
 import "./Offers.scss";
+import { getSuccessToast, getFailToast } from "../../shared/utils";
 
 const Offers = () => {
   const [allOffers, setAllOffers] = useState([]);
@@ -48,11 +49,17 @@ const Offers = () => {
       await offer
         .create(offerData)
         .then(() => {
+          getSuccessToast("Offer successfuly added.");
           console.log("Offer successfuly added.");
           handleModalClose();
           setLocalUpdate(!localUpdate);
         })
-        .catch((error) => console.log("Error while adding offer", error));
+        .catch((error) => {
+          getFailToast(
+            "Offer failed to be added, please contact the administrator."
+          );
+          console.log("Error while adding offer", error);
+        });
     }, 1000);
 
     setOfferData({
@@ -72,14 +79,20 @@ const Offers = () => {
     await offer
       .search(50, 0)
       .then((response) => setAllOffers(response.data))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        getFailToast("Can't fetch offers, please contact the administrator.");
+      });
   };
 
   const fetchAllLogs = async () => {
     await offer
       .searchLogs(50, 0)
       .then((response) => setAllLogs(response.data))
-      .catch(() => console.log("Can't fetch logs."));
+      .catch(() => {
+        console.log("Can't fetch logs.");
+        getFailToast("Can't fetch logs, please contact the administrator.");
+      });
   };
 
   useEffect(() => {

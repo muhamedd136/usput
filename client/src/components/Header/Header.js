@@ -9,13 +9,13 @@ const Header = (props) => {
 
   return (
     <div className="header">
-      <Modal show={modalShow} className="signout_modal">
+      <Modal show={modalShow} className="signout_modal" centered>
         <Modal.Header>Logout</Modal.Header>
         <Modal.Body>Are you sure you want to sign out from Usput?</Modal.Body>
         <Modal.Footer>
           <div className="modal-buttons">
             <Button
-              variant="outline-danger"
+              variant="danger"
               onClick={() => {
                 setModalShow(false);
               }}

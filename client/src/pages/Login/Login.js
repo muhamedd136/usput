@@ -23,6 +23,14 @@ const Login = (props) => {
     });
   };
 
+  const signIn = () => {
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      window.location = "http://localhost:2000/login/google";
+    } else {
+      window.location = "https://usput.herokuapp.com/login/google";
+    }
+  };
+
   const submitForm = async () => {
     if (username.length === 0 || password.length === 0) {
       setIsFilled(false);
@@ -46,7 +54,7 @@ const Login = (props) => {
       .catch(() => {
         setIsLoading(false);
         setLoginData({
-          ...loginData,
+          username: "",
           password: "",
         });
         setIsIncorrect(true);
@@ -54,17 +62,11 @@ const Login = (props) => {
     setIsLoading(false);
   };
 
-  const handleEnterKeyDown = (event) => {
-    if (event.key === "Enter") {
-      submitForm();
-    }
-  };
-
   return (
     <div className="Login row">
       <div className="col-md-8 LoginLayout-left">
         <div className="Login-header">Login</div>
-        <form onKeyDown={handleEnterKeyDown} className="Login-form">
+        <form className="Login-form">
           <div className="Input-group">
             <label className="Input-label">Username</label>
             <input
@@ -101,6 +103,18 @@ const Login = (props) => {
                 onClick={submitForm}
               >
                 Login
+              </Button>
+            )}
+            {isLoading ? (
+              <Spinner size="sm" variant="info" animation="grow" />
+            ) : (
+              <Button
+                block={true}
+                size="sm"
+                variant="secondary"
+                onClick={signIn}
+              >
+                Google Sign in
               </Button>
             )}
             {isFilled ? null : (

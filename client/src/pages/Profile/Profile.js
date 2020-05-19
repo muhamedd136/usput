@@ -1,3 +1,4 @@
+import { getSuccessToast, getFailToast } from "../../shared/utils";
 import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
 import { getSessionCache } from "../../shared/utils";
@@ -38,29 +39,51 @@ const Profile = () => {
           firstName: response.data.firstName,
           lastName: response.data.lastName,
           email: response.data.email,
-          address: response.data.address,
-          zipCode: response.data.zipCode,
-          city: response.data.city,
-          country: response.data.country,
-          completedOffers: response.data.completedOffers,
-          rating: response.data.rating,
+          address: response.data.address
+            ? response.address
+            : "No entered address",
+          zipCode: response.data.zipCode
+            ? response.data.zipCode
+            : "No entered zip",
+          city: response.data.city ? response.data.city : "No entered city",
+          country: response.data.country
+            ? response.data.country
+            : "No entered country",
+          completedOffers: response.data.completedOffers
+            ? response.data.completedOffers
+            : "No completed offers",
         })
       )
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        getFailToast(
+          "Could not fetch user information, please contact the administrator."
+        );
+        console.log(error);
+      });
   };
 
   const fetchUserOffers = async () => {
     await profile
       .getProfileOffers(getSessionCache()._id, 50, 0)
       .then((response) => setProfileOffers(response.data))
-      .catch(() => console.log("Could not fetch offers."));
+      .catch(() => {
+        getFailToast(
+          "Could not fetch offers, please contact the administrator."
+        );
+        console.log("Could not fetch offers.");
+      });
   };
 
   const fetchUserLogs = async () => {
     await profile
       .getProfileLogs(getSessionCache().username, 50, 0)
       .then((response) => setProfileLogs(response.data))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        getFailToast(
+          "Could not fetch offers, please contact the administrator."
+        );
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -82,14 +105,10 @@ const Profile = () => {
           <div className="user-info">
             <span className="info-title">Completed offers</span>
             <span>{profileData.completedOffers}</span>
-            <span className="info-title">Rating</span>
-            <span>{profileData.rating}</span>
             <span className="info-title">Name</span>
             <span>{profileData.firstName + " " + profileData.lastName}</span>
             <span className="info-title">Address</span>
-            <span>
-              {profileData.address ? "No entered address" : profileData.address}
-            </span>
+            <span>{profileData.address}</span>
             <span className="info-title">Postal Code, City</span>
             <span>{profileData.zipCode + ", " + profileData.city}</span>
             <span className="info-title">Country</span>

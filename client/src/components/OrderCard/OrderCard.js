@@ -1,3 +1,4 @@
+import { getSuccessToast, getFailToast } from "../../shared/utils";
 import { updateOfferList } from "../../redux/offers/actions";
 import { Button, Modal } from "react-bootstrap";
 import React, { useState } from "react";
@@ -50,11 +51,15 @@ const OrderCard = (props) => {
     await order
       .cancel(id, orderBody)
       .then(() => {
-        console.log("Order canceled successfuly.");
+        getSuccessToast("Order canceled successfuly.");
         updateOfferList();
         handleCancelAppliedModalShow();
       })
-      .catch(() => console.log("Could not cancel order, try again."));
+      .catch(() => {
+        getFailToast(
+          "Order failed to be canceled, please contact the administrator."
+        );
+      });
   };
 
   const completeOrder = async () => {
@@ -63,11 +68,15 @@ const OrderCard = (props) => {
     await order
       .complete(id, orderBody)
       .then(() => {
-        console.log("Order successfuly comleted.");
+        getSuccessToast("Order successfuly comleted.");
         updateOfferList();
         handleAcceptRequestedModalShow();
       })
-      .catch(() => console.log("Could not complete offer, try again."));
+      .catch(() => {
+        getFailToast(
+          "Order failed to be completed, please contact the administrator."
+        );
+      });
   };
 
   const [acceptRequestedModalShow, setAcceptRequestedModalShow] = useState(
