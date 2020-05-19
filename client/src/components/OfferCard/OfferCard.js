@@ -22,6 +22,7 @@ const OfferCard = (props) => {
   } = props;
 
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [applyModalShow, setApplyModalShow] = useState(false);
   const [editModalShow, setEditModalShow] = useState(false);
   const [editOfferData, setEditOfferData] = useState({
     userId: userId,
@@ -45,6 +46,10 @@ const OfferCard = (props) => {
 
   const handleDeleteModalShow = () => {
     setDeleteModalShow(!deleteModalShow);
+  };
+
+  const handleApplyModalShow = () => {
+    setApplyModalShow(!applyModalShow);
   };
 
   const handleEditModalShow = () => {
@@ -161,6 +166,24 @@ const OfferCard = (props) => {
 
   return (
     <div className="OfferCard">
+      <Modal centered show={applyModalShow} onHide={handleApplyModalShow}>
+        <Modal.Header closeButton>
+          <Modal.Title>Apply to offer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to apply to this offer?</Modal.Body>
+        <Modal.Footer>
+          <Button
+            size="sm"
+            variant="outline-danger"
+            onClick={handleApplyModalShow}
+          >
+            Close
+          </Button>
+          <Button size="sm" variant="info" onClick={applyToOffer}>
+            Apply
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal centered show={deleteModalShow} onHide={handleDeleteModalShow}>
         <Modal.Header closeButton>
           <Modal.Title>Delete offer</Modal.Title>
@@ -190,7 +213,7 @@ const OfferCard = (props) => {
         <Modal.Footer>
           <Button
             size="sm"
-            variant="outline-info"
+            variant="outline-danger"
             onClick={handleEditModalShow}
           >
             Close
@@ -245,7 +268,11 @@ const OfferCard = (props) => {
             </Button>
           </div>
         ) : (
-          <Button size="sm" variant="outline-info" onClick={applyToOffer}>
+          <Button
+            size="sm"
+            variant="outline-info"
+            onClick={handleApplyModalShow}
+          >
             Apply
           </Button>
         )}

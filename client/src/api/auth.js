@@ -1,7 +1,7 @@
 import { BASE_URL } from "../shared/utils";
-import axios from "axios";
+import { authAxios } from "./customAxios";
 
 export default {
-  register: (body) => axios.post(`${BASE_URL}/register`, body),
-  login: (body) => axios.post(`${BASE_URL}/login`, body),
+  register: (body) => authAxios.post(`${BASE_URL}/register`, body),
+  login: (body) => authAxios.post(`${BASE_URL}/login`, body),
 };

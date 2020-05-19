@@ -1,16 +1,17 @@
+import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
-import { Button, Spinner } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import auth from "../../api/auth";
+import "./Register.scss";
 
-const Register = props => {
+const Register = (props) => {
   const [registerData, setRegisterData] = useState({
     firstName: "",
     lastName: "",
     username: "",
     email: "",
     password: "",
-    repeatPassword: ""
+    repeatPassword: "",
   });
 
   const {
@@ -19,64 +20,69 @@ const Register = props => {
     username,
     email,
     password,
-    repeatPassword
+    repeatPassword,
   } = registerData;
 
-  const [isFilled, setIsFilled] = useState(true);
   const [registrationFail, setRegistrationFail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [isFilled, setIsFilled] = useState(true);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     setRegisterData({
       ...registerData,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
-  const submitForm = async () => {
+  const handleSubmit = async (event) => {
+    const form = event.currentTarget;
+
     if (
-      firstName.length === 0 ||
-      lastName.length === 0 ||
-      username.length === 0 ||
-      password.length === 0 ||
-      repeatPassword.length === 0
+      form.checkValidity() === false &&
+      (firstName.length === 0 ||
+        lastName.length === 0 ||
+        username.length === 0 ||
+        email.length === 0 ||
+        password.length === 0 ||
+        repeatPassword.length === 0)
     ) {
-      setIsFilled(false);
-      return;
-    } else {
-      setIsLoading(true);
-      await auth
-        .register({
-          firstName: firstName,
-          lastName: lastName,
-          username: username,
-          email: email,
-          password: password
-        })
-        .then(() => {
-          setRegisterData({
-            firstName: "",
-            lastName: "",
-            username: "",
-            email: "",
-            password: "",
-            repeatPassword: ""
-          });
-          setIsLoading(false);
-          props.history.push("/login");
-        })
-        .catch(() => {
-          setIsLoading(false);
-          setRegistrationFail(true);
-          setRegisterData({
-            firstName: "",
-            lastName: "",
-            username: "",
-            email: "",
-            password: "",
-            repeatPassword: ""
-          });
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
+    setIsLoading(true);
+    await auth
+      .register(registerData)
+      .then(() => {
+        setRegisterData({
+          firstName: "",
+          lastName: "",
+          username: "",
+          email: "",
+          password: "",
+          repeatPassword: "",
         });
+        setIsLoading(false);
+        props.history.push("/login");
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setRegistrationFail(true);
+        setRegisterData({
+          firstName: "",
+          lastName: "",
+          username: "",
+          email: "",
+          password: "",
+          repeatPassword: "",
+        });
+      });
+  };
+
+  const handleEnterKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit();
     }
   };
 
@@ -84,91 +90,119 @@ const Register = props => {
     <div className="Login row">
       <div className="col-md-8 LoginLayout-left">
         <div className="Login-header">Register</div>
-        <form className="Login-form">
-          <div className="Input-group">
-            <label className="Input-label">First name</label>
-            <input
-              className="Input-input"
+        <Form
+          className="Register-Form"
+          noValidate
+          validated={validated}
+          onSubmit={handleSubmit}
+        >
+          <Form.Group controlId="firstName">
+            <Form.Label>First name</Form.Label>
+            <Form.Control
+              required
               type="text"
-              placeholder="First name"
               name="firstName"
               value={firstName}
               onChange={handleChange}
+              placeholder="First name"
             />
-          </div>
-          <div className="Input-group">
-            <label className="Input-label">Last name</label>
-            <input
-              className="Input-input"
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid name.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="lastName">
+            <Form.Label>Last name</Form.Label>
+            <Form.Control
+              required
               type="text"
               placeholder="Last name"
               name="lastName"
               value={lastName}
               onChange={handleChange}
             />
-          </div>
-          <div className="Input-group">
-            <label className="Input-label">Username</label>
-            <input
-              className="Input-input"
-              type="username"
-              placeholder="Username"
-              name="username"
-              value={username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="Input-group">
-            <label className="Input-label">Email</label>
-            <input
-              className="Input-input"
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid last name.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="username">
+            <Form.Label>Username</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                aria-describedby="inputGroupPrepend"
+                required
+                name="username"
+                value={username}
+                onChange={handleChange}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please choose a username.
+              </Form.Control.Feedback>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
               type="email"
               placeholder="Email"
+              required
               name="email"
               value={email}
               onChange={handleChange}
             />
-          </div>
-          <div className="Input-group">
-            <label className="Input-label">Password</label>
-            <input
-              className="Input-input"
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid email.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
               type="password"
               placeholder="Password"
+              required
               name="password"
               value={password}
               onChange={handleChange}
             />
-          </div>
-          <div className="Input-group">
-            <label className="Input-label">Repeat password</label>
-            <input
-              className="Input-input"
+            <Form.Control.Feedback type="invalid">
+              Please provide a password.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="repeatPassword">
+            <Form.Label>Repeat password</Form.Label>
+            <Form.Control
               type="password"
               placeholder="Repeat password"
+              required
               name="repeatPassword"
               value={repeatPassword}
               onChange={handleChange}
             />
-          </div>
-          <div className="Buttons-group">
-            <div>
+            <Form.Control.Feedback type="invalid">
+              Passwords don't match.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Already have an account? <Link to="/login">Login here!</Link>
-            </div>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
             {isLoading ? (
               <Spinner size="sm" variant="info" animation="grow" />
             ) : (
-              <Button
-                block={true}
-                size="sm"
-                variant="info"
-                onClick={submitForm}
-              >
+              <Button block={true} size="md" variant="info" type="submit">
                 Register
               </Button>
             )}
-          </div>
-        </form>
+          </Form.Group>
+        </Form>
       </div>
       <div className="col-md-4 LoginLayout-right">
         <div className="Login-banner">USPUT</div>

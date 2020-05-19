@@ -46,7 +46,7 @@ const Login = (props) => {
       .catch(() => {
         setIsLoading(false);
         setLoginData({
-          username: "",
+          ...loginData,
           password: "",
         });
         setIsIncorrect(true);
@@ -54,11 +54,17 @@ const Login = (props) => {
     setIsLoading(false);
   };
 
+  const handleEnterKeyDown = (event) => {
+    if (event.key === "Enter") {
+      submitForm();
+    }
+  };
+
   return (
     <div className="Login row">
       <div className="col-md-8 LoginLayout-left">
         <div className="Login-header">Login</div>
-        <form className="Login-form">
+        <form onKeyDown={handleEnterKeyDown} className="Login-form">
           <div className="Input-group">
             <label className="Input-label">Username</label>
             <input

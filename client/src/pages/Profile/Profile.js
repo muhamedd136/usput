@@ -75,6 +75,7 @@ const Profile = () => {
     <div className="row profile">
       <div className="col-md-3 col-lg-2 profile-cardContainer">
         <div className="profile-info profile-card">
+          <p className="Card-Heading">Personal info</p>
           <div className="profile-image">
             <Avatar avatar={profileData.avatar} />
           </div>
@@ -98,6 +99,7 @@ const Profile = () => {
       </div>
       <div className="col-md-6 col-lg-7 profile-cardContainer">
         <div className="profile-offers profile-card scroll">
+          <p className="Card-Heading">Your offers</p>
           {profileOffers && profileOffers.length > 0
             ? profileOffers.map((offer, index) => {
                 return (
@@ -120,6 +122,8 @@ const Profile = () => {
       </div>
       <div className="col-md-3 col-lg-3 profile-cardContainer">
         <div className="profile-logs profile-card scroll">
+          <p className="Card-Heading">Your activity</p>
+
           {profileLogs && profileLogs.length > 0
             ? profileLogs.map((log, index) => {
                 return (

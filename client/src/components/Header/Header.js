@@ -42,7 +42,7 @@ const Header = (props) => {
             <div className="navBase-logo">
               <a
                 target="_blank"
-                href="https://www.github.com/muhamedd136/Course-Project"
+                href="https://www.github.com/muhamedd136/usput"
                 rel="noopener noreferrer"
               >
                 <img src={logo} alt="" />

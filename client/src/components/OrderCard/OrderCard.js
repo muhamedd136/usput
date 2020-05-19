@@ -1,5 +1,5 @@
 import { updateOfferList } from "../../redux/offers/actions";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { order } from "../../api";
@@ -52,6 +52,7 @@ const OrderCard = (props) => {
       .then(() => {
         console.log("Order canceled successfuly.");
         updateOfferList();
+        handleCancelAppliedModalShow();
       })
       .catch(() => console.log("Could not cancel order, try again."));
   };
@@ -64,12 +65,67 @@ const OrderCard = (props) => {
       .then(() => {
         console.log("Order successfuly comleted.");
         updateOfferList();
+        handleAcceptRequestedModalShow();
       })
       .catch(() => console.log("Could not complete offer, try again."));
   };
 
+  const [acceptRequestedModalShow, setAcceptRequestedModalShow] = useState(
+    false
+  );
+  const [cancelAppliedModalShow, setCancelAppliedModalShow] = useState(false);
+
+  const handleCancelAppliedModalShow = () => {
+    setCancelAppliedModalShow(!cancelAppliedModalShow);
+  };
+  const handleAcceptRequestedModalShow = () => {
+    setAcceptRequestedModalShow(!acceptRequestedModalShow);
+  };
+
+  const generateModal = (
+    showModal,
+    handleShowModal,
+    title,
+    text,
+    onSubmit,
+    confirmationButtonText
+  ) => {
+    return (
+      <Modal centered show={showModal} onHide={handleShowModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{text}</Modal.Body>
+        <Modal.Footer>
+          <Button size="sm" variant="outline-danger" onClick={handleShowModal}>
+            Close
+          </Button>
+          <Button size="sm" variant="info" onClick={onSubmit}>
+            {confirmationButtonText}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
   return (
     <div className="OrderCard">
+      {generateModal(
+        cancelAppliedModalShow,
+        handleCancelAppliedModalShow,
+        "Cancel application",
+        "Are you sure you want to cancel this application?",
+        cancelApplication,
+        "Cancel Application"
+      )}
+      {generateModal(
+        acceptRequestedModalShow,
+        handleAcceptRequestedModalShow,
+        "Accept application",
+        "Are you sure you want to accept this application?",
+        completeOrder,
+        "Accept application"
+      )}
       <div className="OrderCard-firstRow">
         <p>
           <span>Name:</span> {name && name}
@@ -108,7 +164,7 @@ const OrderCard = (props) => {
               <Button
                 size="sm"
                 variant="outline-danger"
-                onClick={cancelApplication}
+                onClick={handleCancelAppliedModalShow}
               >
                 Cancel
               </Button>
@@ -127,11 +183,15 @@ const OrderCard = (props) => {
               <Button
                 size="sm"
                 variant="outline-danger"
-                onClick={cancelApplication}
+                onClick={handleCancelAppliedModalShow}
               >
-                Decline
+                Cancel
               </Button>
-              <Button size="sm" variant="outline-info" onClick={completeOrder}>
+              <Button
+                size="sm"
+                variant="outline-info"
+                onClick={handleAcceptRequestedModalShow}
+              >
                 Accept
               </Button>
             </div>

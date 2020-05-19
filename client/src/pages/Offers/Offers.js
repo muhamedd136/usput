@@ -94,6 +94,7 @@ const Offers = () => {
         <Form.Control
           type="text"
           name="name"
+          placeholder="Offer name"
           value={name}
           onChange={handleChange}
         />
@@ -103,6 +104,7 @@ const Offers = () => {
         <Form.Control
           type="number"
           name="price"
+          placeholder={0}
           value={price}
           onChange={handleChange}
         />
@@ -148,9 +150,17 @@ const Offers = () => {
       </Modal>
       <div className="col-md-9 offers-cardContainer">
         <div className="offers-card">
-          <Button variant="info" onClick={handleModalShow}>
-            Add offer
-          </Button>
+          <div className="offers-headingAndButton">
+            <p className="Card-Heading">Offers</p>
+            <Button
+              className="addOffer-Button"
+              size="md"
+              variant="info"
+              onClick={handleModalShow}
+            >
+              Add offer
+            </Button>
+          </div>
           <div className="offers-card scroll">
             {allOffers && allOffers.length > 0
               ? allOffers.map((offer, index) => {
@@ -175,18 +185,21 @@ const Offers = () => {
         </div>
       </div>
       <div className="col-md-3 offers-cardContainer">
-        <div className="offers-card scroll">
-          {allLogs && allLogs.length > 0
-            ? allLogs.map((log, index) => {
-                return (
-                  <LogCard
-                    key={index}
-                    message={log.message}
-                    created={log.created}
-                  />
-                );
-              })
-            : "No logs available."}
+        <div className="offers-card">
+          <p className="Card-Heading">User logs</p>
+          <div className="offers-card scroll">
+            {allLogs && allLogs.length > 0
+              ? allLogs.map((log, index) => {
+                  return (
+                    <LogCard
+                      key={index}
+                      message={log.message}
+                      created={log.created}
+                    />
+                  );
+                })
+              : "No logs available."}
+          </div>
         </div>
       </div>
     </div>
