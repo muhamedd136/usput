@@ -6,6 +6,8 @@ import React, { useState, useEffect } from "react";
 import { offer } from "../../api";
 import "./Offers.scss";
 import { getSuccessToast, getFailToast } from "../../shared/utils";
+import BlockUi from "react-block-ui";
+import "react-block-ui/style.css";
 
 const Offers = () => {
 	const [allOffers, setAllOffers] = useState([]);
@@ -27,6 +29,10 @@ const Offers = () => {
 	const [modalShow, setModalShow] = useState(false);
 	const [localUpdate, setLocalUpdate] = useState(false);
 
+	const [stateAddOffer, setStateAddOffer] = useState(false);
+	const [stateFetchOffers, setStateFetchOffers] = useState(false);
+	const [stateFetchLogs, setStateFetchLogs] = useState(false);
+
 	const handleModalShow = () => {
 		setModalShow(true);
 	};
@@ -44,7 +50,7 @@ const Offers = () => {
 
 	const submitAddOfferForm = async () => {
 		offerData.created = Date.now();
-
+		setStateAddOffer(true);
 		setTimeout(async () => {
 			await offer
 				.create(offerData)
@@ -53,10 +59,12 @@ const Offers = () => {
 					console.log("Offer successfuly added.");
 					handleModalClose();
 					setLocalUpdate(!localUpdate);
+					setStateAddOffer(false);
 				})
 				.catch((error) => {
 					getFailToast("Offer failed to be added, please contact the administrator.");
 					console.log("Error while adding offer", error);
+					setStateAddOffer(false);
 				});
 		}, 1000);
 
@@ -74,22 +82,32 @@ const Offers = () => {
 	};
 
 	const fetchAllOffers = async () => {
+		setStateFetchOffers(true);
 		await offer
 			.search(50, 0)
-			.then((response) => setAllOffers(response.data))
+			.then((response) => {
+				setStateFetchOffers(false);
+				setAllOffers(response.data);
+			})
 			.catch((error) => {
 				console.log(error);
 				getFailToast("Can't fetch offers, please contact the administrator.");
+				setStateFetchOffers(false);
 			});
 	};
 
 	const fetchAllLogs = async () => {
+		setStateFetchLogs(true);
 		await offer
 			.searchLogs(50, 0)
-			.then((response) => setAllLogs(response.data))
+			.then((response) => {
+				setStateFetchLogs(false);
+				setAllLogs(response.data);
+			})
 			.catch(() => {
 				console.log("Can't fetch logs.");
 				getFailToast("Can't fetch logs, please contact the administrator.");
+				setStateFetchLogs(false);
 			});
 	};
 
@@ -134,55 +152,62 @@ const Offers = () => {
 	return (
 		<div className="row offers">
 			<Modal centered show={modalShow} onHide={handleModalClose}>
-				<Modal.Header closeButton>
-					<Modal.Title>Add offer</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>{addOfferFormMarkup}</Modal.Body>
-				<Modal.Footer>
-					<Button size="sm" variant="secondary" onClick={handleModalClose}>
-						Close
-					</Button>
-					<Button size="sm" variant="info" onClick={submitAddOfferForm}>
-						Submit
-					</Button>
-				</Modal.Footer>
+				<BlockUi tag="div" blocking={stateAddOffer}>
+					<Modal.Header closeButton>
+						<Modal.Title>Add offer</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>{addOfferFormMarkup}</Modal.Body>
+
+					<Modal.Footer>
+						<Button size="sm" variant="secondary" onClick={handleModalClose}>
+							Close
+						</Button>
+						<Button size="sm" variant="info" onClick={submitAddOfferForm}>
+							Submit
+						</Button>
+					</Modal.Footer>
+				</BlockUi>
 			</Modal>
 			<div className="col-md-9 offers-cardContainer">
-				<div className="offers-card">
-					<Button variant="info" onClick={handleModalShow}>
-						Add offer
-					</Button>
-					<div className="offers-card scroll">
-						{allOffers && allOffers.length > 0
-							? allOffers.map((offer, index) => {
-									return (
-										<OfferCard
-											key={index}
-											id={offer._id}
-											userId={offer.userId}
-											username={offer.username}
-											name={offer.name}
-											price={offer.price}
-											created={offer.created}
-											startingLocation={offer.startingLocation}
-											endingLocation={offer.endingLocation}
-											status={offer.status}
-											isRemoved={offer.isRemoved}
-										/>
-									);
-							  })
-							: "No available offers."}
+				<BlockUi tag="div" blocking={stateFetchOffers}>
+					<div className="offers-card">
+						<Button variant="info" onClick={handleModalShow}>
+							Add offer
+						</Button>
+						<div className="offers-card scroll" hidden={stateFetchOffers}>
+							{allOffers && allOffers.length > 0
+								? allOffers.map((offer, index) => {
+										return (
+											<OfferCard
+												key={index}
+												id={offer._id}
+												userId={offer.userId}
+												username={offer.username}
+												name={offer.name}
+												price={offer.price}
+												created={offer.created}
+												startingLocation={offer.startingLocation}
+												endingLocation={offer.endingLocation}
+												status={offer.status}
+												isRemoved={offer.isRemoved}
+											/>
+										);
+								  })
+								: "No available offers."}
+						</div>
 					</div>
-				</div>
+				</BlockUi>
 			</div>
 			<div className="col-md-3 offers-cardContainer">
-				<div className="offers-card scroll">
-					{allLogs && allLogs.length > 0
-						? allLogs.map((log, index) => {
-								return <LogCard key={index} message={log.message} created={log.created} />;
-						  })
-						: "No logs available."}
-				</div>
+				<BlockUi tag="div" blocking={stateFetchLogs}>
+					<div className="offers-card scroll" hidden={stateFetchLogs}>
+						{allLogs && allLogs.length > 0
+							? allLogs.map((log, index) => {
+									return <LogCard key={index} message={log.message} created={log.created} />;
+							  })
+							: "No logs available."}
+					</div>
+				</BlockUi>
 			</div>
 		</div>
 	);
