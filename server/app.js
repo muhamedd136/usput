@@ -118,13 +118,18 @@ app.get("/login/google", (req, res) => {
 				}
 				let data = response.data;
 
-				full_name = data.name.split(" ");
-
 				db.users.findAndModify(
 					{
 						query: { email: data.email },
 						update: {
-							$setOnInsert: { email: data.email, firstName: full_name[0], lastName: full_name[1], type: "Member" },
+							$setOnInsert: {
+								username: data.given_name.toLowerCase() + "_" + data.family_name.toLowerCase(),
+								avatar: [data.picture],
+								email: data.email,
+								firstName: data.given_name,
+								lastName: data.family_name,
+								type: "Member",
+							},
 						},
 						new: true,
 						upsert: true,
