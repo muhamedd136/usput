@@ -1,6 +1,6 @@
 import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import auth from "../../api/auth";
 import "./Register.scss";
 
@@ -37,6 +37,7 @@ const Register = (props) => {
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
+    console.log(form.checkValidity());
 
     if (
       form.checkValidity() === false &&
@@ -69,21 +70,7 @@ const Register = (props) => {
       .catch(() => {
         setIsLoading(false);
         setRegistrationFail(true);
-        setRegisterData({
-          firstName: "",
-          lastName: "",
-          username: "",
-          email: "",
-          password: "",
-          repeatPassword: "",
-        });
       });
-  };
-
-  const handleEnterKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSubmit();
-    }
   };
 
   return (
