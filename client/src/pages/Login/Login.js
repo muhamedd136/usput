@@ -90,7 +90,7 @@ const Login = (props) => {
             />
           </div>
           <div className="Buttons-group">
-            <div>
+            <div style={{ marginBottom: "5px" }}>
               Don't have an account? <Link to="/register">Register here!</Link>
             </div>
             {isLoading ? (

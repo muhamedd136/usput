@@ -88,3 +88,14 @@
   font-size: 0.75em;
   display: relative;
 }
+
+.offers-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+
+  > button {
+    margin: 0 5px;
+  }
+}

@@ -2,7 +2,7 @@ import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
 import { getSessionCache } from "../../shared/utils";
 import React, { useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Pagination } from "react-bootstrap";
 import { connect } from "react-redux";
 import BlockUi from "react-block-ui";
 import { offer } from "../../api";
@@ -17,7 +17,9 @@ import {
 import "./Offers.scss";
 
 const Offers = ({ update }) => {
+  const [totalOffers, setTotalOffers] = useState(0);
   const [allOffers, setAllOffers] = useState([]);
+  const [totalLogs, setTotalLogs] = useState(0);
   const [allLogs, setAllLogs] = useState([]);
 
   const [offerData, setOfferData] = useState({
@@ -147,13 +149,39 @@ const Offers = ({ update }) => {
     }
   };
 
+  /** pagination props */
+  const ROWS_PER_PAGE = 10;
+  const TOTAL_PAGES = Math.ceil(totalOffers / ROWS_PER_PAGE);
+  const [currentOfferPage, setCurrentOfferPage] = useState(1);
+  const OFFSET = ROWS_PER_PAGE * currentOfferPage - ROWS_PER_PAGE;
+
+  const handleOfferPageChange = (direction) => {
+    switch (direction) {
+      case "next":
+        if (currentOfferPage <= TOTAL_PAGES) {
+          setCurrentOfferPage(currentOfferPage + 1);
+        } else break;
+        break;
+      case "previous":
+        if (currentOfferPage === 1) break;
+        else {
+          setCurrentOfferPage(currentOfferPage - 1);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const fetchAllOffers = async () => {
     setStateFetchOffers(true);
+
     await offer
-      .search(50, 0)
+      .search(ROWS_PER_PAGE, OFFSET)
       .then((response) => {
         setStateFetchOffers(false);
-        setAllOffers(response.data);
+        setAllOffers(response.data[0].records);
+        setTotalOffers(response.data[0].total[0].count);
       })
       .catch(() => {
         getFailToast("Can't fetch offers, please contact the administrator.");
@@ -164,10 +192,11 @@ const Offers = ({ update }) => {
   const fetchAllLogs = async () => {
     setStateFetchLogs(true);
     await offer
-      .searchLogs(50, 0)
+      .searchLogs(10, 0)
       .then((response) => {
         setStateFetchLogs(false);
-        setAllLogs(response.data);
+        setAllLogs(response.data[0].records);
+        setTotalLogs(response.data[0].total[0].count);
       })
       .catch(() => {
         getFailToast("Can't fetch logs, please contact the administrator.");
@@ -178,7 +207,7 @@ const Offers = ({ update }) => {
   useEffect(() => {
     fetchAllOffers();
     fetchAllLogs();
-  }, [localUpdate, update]);
+  }, [localUpdate, update, currentOfferPage]);
 
   const addOfferFormMarkup = (
     <div className="form-wrapper">
@@ -285,7 +314,7 @@ const Offers = ({ update }) => {
                 Add offer
               </Button>
             </div>
-            <div className="offers-card scroll" hidden={stateFetchOffers}>
+            <div className="scroll" hidden={stateFetchOffers}>
               {allOffers && allOffers.length > 0
                 ? allOffers.map((offer, index) => {
                     return (
@@ -306,24 +335,50 @@ const Offers = ({ update }) => {
                   })
                 : "No available offers."}
             </div>
+            <div className="offers-pagination">
+              <Button
+                size="md"
+                variant="info"
+                disabled={currentOfferPage === 1}
+                onClick={() => {
+                  handleOfferPageChange("previous");
+                }}
+              >{`<`}</Button>
+              <Button
+                size="md"
+                variant="info"
+                disabled={currentOfferPage === TOTAL_PAGES}
+                onClick={() => {
+                  handleOfferPageChange("next");
+                }}
+              >{`>`}</Button>
+            </div>
           </div>
         </BlockUi>
       </div>
       <div className="col-md-3 offers-cardContainer">
         <BlockUi tag="div" blocking={stateFetchLogs}>
-          <div className="offers-card scroll" hidden={stateFetchLogs}>
-            <p className="Card-Heading">User logs</p>
-            {allLogs && allLogs.length > 0
-              ? allLogs.map((log, index) => {
-                  return (
-                    <LogCard
-                      key={index}
-                      message={log.message}
-                      created={log.created}
-                    />
-                  );
-                })
-              : "No logs available."}
+          <div
+            className="offers-card"
+            style={{ overflow: "hidden" }}
+            hidden={stateFetchLogs}
+          >
+            <p style={{ textAlign: "center" }} className="Card-Heading">
+              User activity
+            </p>
+            <div className="scroll" style={{ height: "100%", width: "100%" }}>
+              {allLogs && allLogs.length > 0
+                ? allLogs.map((log, index) => {
+                    return (
+                      <LogCard
+                        key={index}
+                        message={log.message}
+                        created={log.created}
+                      />
+                    );
+                  })
+                : "No logs available."}
+            </div>
           </div>
         </BlockUi>
       </div>

@@ -119,16 +119,30 @@ class UsersStore extends BaseStore {
     let limit = Number(req.query.limit) || 5;
     let offset = Number(req.query.offset) || 0;
 
-    this.db.offers
-      .find({ userId: userId, isRemoved: false })
-      .sort({ created: -1 })
-      .skip(offset)
-      .limit(limit, (error, docs) => {
+    this.db.offers.aggregate(
+      [
+        {
+          $facet: {
+            records: [
+              { $match: { userId: userId, isRemoved: false } },
+              { $sort: { created: -1 } },
+              { $skip: offset },
+              { $limit: limit },
+            ],
+            total: [
+              { $match: { userId: userId, isRemoved: false } },
+              { $count: "count" },
+            ],
+          },
+        },
+      ],
+      (error, docs) => {
         if (error) {
           console.log(error.errmsg);
         }
         res.json(docs);
-      });
+      }
+    );
   }
 }
 
