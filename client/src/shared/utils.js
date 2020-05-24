@@ -56,6 +56,10 @@ export const validateEmail = (email) => {
   );
 };
 
+export function validateUrl(url) {
+  return /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/.test(url);
+}
+
 export const formValid = (errors, state) => {
   let valid = true;
 

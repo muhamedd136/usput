@@ -1,31 +1,60 @@
 import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
-import { getSessionCache } from "../../shared/utils";
+import { getSessionCache, formValid } from "../../shared/utils";
 import Avatar from "../../components/Avatar/Avatar";
 import React, { useState, useEffect } from "react";
-import { getFailToast } from "../../shared/utils";
+import { Button, Modal } from "react-bootstrap";
 import ScrollArea from "react-scrollbar";
-import { Button } from "react-bootstrap";
 import BlockUi from "react-block-ui";
 import { profile } from "../../api";
 import "react-block-ui/style.css";
+import {
+  validateAddress,
+  validateEmail,
+  getFailToast,
+  validateName,
+  validateUrl,
+} from "../../shared/utils";
 import "./Profile.scss";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
     id: 0,
     username: "",
+    avatar: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    address: null,
+    zipCode: null,
+    city: null,
+    country: null,
+    completedOffers: 0,
+  });
+
+  const {
+    id,
+    avatar,
+    firstName,
+    lastName,
+    email,
+    address,
+    zipCode,
+    city,
+    country,
+  } = profileData;
+
+  const [errors, setErrors] = useState({
     avatar: "",
     firstName: "",
     lastName: "",
     email: "",
     address: "",
-    zipCode: 0,
+    zipCode: "",
     city: "",
     country: "",
-    completedOffers: 0,
-    rating: 0,
   });
+
   const [profileOffers, setProfileOffers] = useState([]);
   const [profileLogs, setProfileLogs] = useState([]);
   const [totalOffers, setTotalOffers] = useState(0);
@@ -34,6 +63,141 @@ const Profile = () => {
   const [stateUserOffers, setStateUserOffers] = useState(false);
   const [stateUserLogs, setStateUserLogs] = useState(false);
   const [stateProfile, setStateProfile] = useState(false);
+
+  const [modalShow, setModalShow] = useState(false);
+  const [update, setUpdate] = useState(false);
+
+  const handleModalShow = () => {
+    setModalShow(true);
+  };
+
+  const handleModalClose = () => {
+    setModalShow(false);
+  };
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+
+    switch (name) {
+      //validate url
+      case "avatar":
+        setErrors({
+          ...errors,
+          [name]:
+            value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateUrl(value) === false
+              ? "Enter a valid url"
+              : "",
+        });
+        break;
+      case "firstName":
+        setErrors({
+          ...errors,
+          [name]:
+            value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateName(value) === false
+              ? "Enter a valid name"
+              : "",
+        });
+        break;
+      case "lastName":
+        setErrors({
+          ...errors,
+          [name]:
+            value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateName(value) === false
+              ? "Enter a valid name"
+              : "",
+        });
+        break;
+      case "email":
+        setErrors({
+          ...errors,
+          [name]:
+            validateEmail(value) === false && value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateEmail(value) === false
+              ? "Enter a valid email"
+              : "",
+        });
+        break;
+      case "address":
+        setErrors({
+          ...errors,
+          [name]:
+            validateAddress(value) === false && value.length < 5
+              ? "Minimum 5 characaters required"
+              : validateAddress(value) === false
+              ? "Enter a valid address"
+              : "",
+        });
+        break;
+      case "zipCode":
+        setErrors({
+          ...errors,
+          [name]: value.length < 0 ? "Enter a positive value" : "",
+        });
+        break;
+      case "city":
+        setErrors({
+          ...errors,
+          [name]:
+            validateName(value) === false && value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateName(value) === false
+              ? "Enter a valid name"
+              : "",
+        });
+        break;
+      case "country":
+        setErrors({
+          ...errors,
+          [name]:
+            validateName(value) === false && value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateName(value) === false
+              ? "Enter a valid country name"
+              : "",
+        });
+        break;
+      default:
+        break;
+    }
+
+    setProfileData({
+      ...profileData,
+      [name]: value,
+    });
+  };
+
+  const submitEditForm = async () => {
+    if (
+      formValid(errors, {
+        avatar,
+        firstName,
+        lastName,
+        email,
+        address,
+        zipCode,
+        city,
+        country,
+      })
+    ) {
+      await profile
+        .updateProfile(id, profileData)
+        .then(() => {
+          handleModalClose();
+          setUpdate(!update);
+        })
+        .catch(() => console.log("Could not update."));
+    } else {
+      console.error("FORM INVALID - CHECK ALL FIELDS");
+    }
+  };
 
   /** pagination props */
   const ROWS_PER_PAGE = 10;
@@ -131,7 +295,7 @@ const Profile = () => {
         setTotalLogs(response.data[0].total[0].count);
         setScrollEnabled(true);
       })
-      .catch((error) => {
+      .catch(() => {
         getFailToast(
           "Could not fetch offers, please contact the administrator."
         );
@@ -170,18 +334,186 @@ const Profile = () => {
     fetchUserLogs();
   }, []);
 
+  const editProfileFormMarkup = (
+    <div className="form-wrapper">
+      <div className="form-group">
+        <label className="input-label">Photo</label>
+        <input
+          className={
+            errors.avatar.length > 0 ? "input-field input-error" : "input-field"
+          }
+          type="text"
+          placeholder="Photo"
+          name="avatar"
+          onChange={handleChange}
+          value={profileData.avatar}
+        />
+        {errors.avatar.length > 0 && (
+          <span className="input-errorMessage">{errors.avatar}</span>
+        )}
+      </div>
+      <div className="profile-form-row">
+        <div style={{ marginRight: "5px" }} className="form-group">
+          <label className="input-label">First Name</label>
+          <input
+            className={
+              errors.firstName.length > 0
+                ? "input-field input-error"
+                : "input-field"
+            }
+            type="text"
+            placeholder="First Name"
+            name="firstName"
+            onChange={handleChange}
+            value={profileData.firstName}
+          />
+          {errors.firstName.length > 0 && (
+            <span className="input-errorMessage">{errors.firstName}</span>
+          )}
+        </div>
+        <div style={{ marginLeft: "5px" }} className="form-group">
+          <label className="input-label">Last Name</label>
+          <input
+            className={
+              errors.lastName.length > 0
+                ? "input-field input-error"
+                : "input-field"
+            }
+            type="text"
+            placeholder="Last Name"
+            name="lastName"
+            onChange={handleChange}
+            value={profileData.lastName}
+          />
+          {errors.lastName.length > 0 && (
+            <span className="input-errorMessage">{errors.lastName}</span>
+          )}
+        </div>
+      </div>
+      <div className="form-group">
+        <label className="input-label">Email</label>
+        <input
+          className={
+            errors.email.length > 0 ? "input-field input-error" : "input-field"
+          }
+          type="email"
+          placeholder="Email"
+          name="email"
+          onChange={handleChange}
+          value={profileData.email}
+        />
+        {errors.email.length > 0 && (
+          <span className="input-errorMessage">{errors.email}</span>
+        )}
+      </div>
+      <div className="profile-form-row">
+        <div style={{ marginRight: "5px" }} className="form-group">
+          <label className="input-label">Address</label>
+          <input
+            className={
+              errors.address.length > 0
+                ? "input-field input-error"
+                : "input-field"
+            }
+            type="text"
+            placeholder="Address"
+            name="address"
+            onChange={handleChange}
+            value={profileData.address}
+          />
+          {errors.address.length > 0 && (
+            <span className="input-errorMessage">{errors.address}</span>
+          )}
+        </div>
+        <div style={{ marginLeft: "5px" }} className="form-group">
+          <label className="input-label">Postal Code</label>
+          <input
+            className={
+              errors.zipCode.length > 0
+                ? "input-field input-error"
+                : "input-field"
+            }
+            type="text"
+            placeholder="Postal Code"
+            name="zipCode"
+            onChange={handleChange}
+            value={profileData.zipCode}
+          />
+          {errors.zipCode.length > 0 && (
+            <span className="input-errorMessage">{errors.zipCode}</span>
+          )}
+        </div>
+      </div>
+      <div className="profile-form-row">
+        <div style={{ marginRight: "5px" }} className="form-group">
+          <label className="input-label">City</label>
+          <input
+            className={
+              errors.city.length > 0 ? "input-field input-error" : "input-field"
+            }
+            type="text"
+            placeholder="City"
+            name="city"
+            onChange={handleChange}
+            value={profileData.city}
+          />
+          {errors.city.length > 0 && (
+            <span className="input-errorMessage">{errors.city}</span>
+          )}
+        </div>
+        <div style={{ marginLeft: "5px" }} className="form-group">
+          <label className="input-label">Country</label>
+          <input
+            className={
+              errors.country.length > 0
+                ? "input-field input-error"
+                : "input-field"
+            }
+            type="text"
+            placeholder="Country"
+            name="country"
+            onChange={handleChange}
+            value={profileData.country}
+          />
+          {errors.country.length > 0 && (
+            <span className="input-errorMessage">{errors.country}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="row profile">
+      <Modal size="lg" centered show={modalShow} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{editProfileFormMarkup}</Modal.Body>
+        <Modal.Footer>
+          <Button size="md" variant="outline-danger" onClick={handleModalClose}>
+            Close
+          </Button>
+          <Button size="md" variant="info" onClick={submitEditForm}>
+            Save changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div className="col-md-3 col-lg-2 profile-cardContainer">
         <BlockUi tag="div" blocking={stateProfile}>
           <div className="profile-info profile-card">
             <p className="Card-Heading">Personal info</p>
+            {profileData.id === getSessionCache()._id ? (
+              <Button size="sm" variant="info" onClick={handleModalShow}>
+                Edit profile
+              </Button>
+            ) : null}
             <div className="profile-image">
               <Avatar avatar={profileData.avatar} />
             </div>
             <div className="user-info">
-              <span className="info-title">Completed offers</span>
-              <span>{profileData.completedOffers}</span>
+              {/* <span className="info-title">Completed offers</span>
+              <span>{profileData.completedOffers}</span> */}
               <span className="info-title">Name</span>
               <span>{profileData.firstName + " " + profileData.lastName}</span>
               <span className="info-title">Address</span>

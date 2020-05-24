@@ -83,6 +83,13 @@
   color: #78ccc1;
 }
 
+.profile-form-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media screen and (min-width: 375px) {
   .profile {
     .profile-image {
