@@ -1,8 +1,9 @@
-import { getSuccessToast, getFailToast } from "../../shared/utils";
 import OrderCard from "../../components/OrderCard/OrderCard";
 import { ButtonGroup, Button } from "react-bootstrap";
 import { getSessionCache } from "../../shared/utils";
 import React, { useState, useEffect } from "react";
+import { getFailToast } from "../../shared/utils";
+import ScrollArea from "react-scrollbar";
 import { connect } from "react-redux";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
@@ -224,7 +225,7 @@ const Orders = ({ update }) => {
               style={{ display: displayApplied }}
               hidden={stateOrdersCard}
             >
-              <div className="Orders-scroll">
+              <ScrollArea smoothScrolling={true} className="Orders-scroll">
                 {appliedOffers && appliedOffers.length > 0
                   ? appliedOffers.map((offer, index) => {
                       return (
@@ -248,7 +249,7 @@ const Orders = ({ update }) => {
                       );
                     })
                   : "You haven't applied to any offers."}
-              </div>
+              </ScrollArea>
               <div className="offers-pagination">
                 <Button
                   size="md"
@@ -273,7 +274,7 @@ const Orders = ({ update }) => {
               style={{ display: displayRequested }}
               hidden={stateOrdersCard}
             >
-              <div className="Orders-scroll">
+              <ScrollArea smoothScrolling={true} className="Orders-scroll">
                 {requestedOffers && requestedOffers.length > 0
                   ? requestedOffers.map((offer, index) => {
                       return (
@@ -297,7 +298,7 @@ const Orders = ({ update }) => {
                       );
                     })
                   : "Nobody has applied to your offers."}
-              </div>
+              </ScrollArea>
               <div className="offers-pagination">
                 <Button
                   size="md"
@@ -324,7 +325,7 @@ const Orders = ({ update }) => {
               style={{ display: displayCompleted }}
               hidden={stateOrdersCard}
             >
-              <div className="Orders-scroll">
+              <ScrollArea smoothScrolling={true} className="Orders-scroll">
                 {completedOffers && completedOffers.length > 0
                   ? completedOffers.map((offer, index) => {
                       return (
@@ -348,7 +349,7 @@ const Orders = ({ update }) => {
                       );
                     })
                   : "You have not completed any offers."}
-              </div>
+              </ScrollArea>
               <div className="offers-pagination">
                 <Button
                   size="md"

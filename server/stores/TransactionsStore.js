@@ -39,16 +39,6 @@ class TransactionsStore extends BaseStore {
         res.json(docs);
       }
     );
-
-    // this.db.transactions
-    // 	.find({ offererId: userId })
-    // 	.skip(offset)
-    // 	.limit(limit, (error, docs) => {
-    // 		if (error) {
-    // 			throw error;
-    // 		}
-    // 		res.json(docs);
-    // 	});
   }
 }
 

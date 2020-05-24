@@ -2,7 +2,8 @@ import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
 import { getSessionCache } from "../../shared/utils";
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Pagination } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
+import ScrollArea from "react-scrollbar";
 import { connect } from "react-redux";
 import BlockUi from "react-block-ui";
 import { offer } from "../../api";
@@ -189,25 +190,54 @@ const Offers = ({ update }) => {
       });
   };
 
+  /** infinite scroll */
+  const LOGS_PER_PAGE = 30;
+  const TOTAL_LOG_PAGES = Math.ceil(totalLogs / LOGS_PER_PAGE);
+  const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [currentLogPage, setCurrentLogPage] = useState(1);
+  const LOG_OFFSET = LOGS_PER_PAGE * currentLogPage - LOGS_PER_PAGE;
+
   const fetchAllLogs = async () => {
     setStateFetchLogs(true);
     await offer
-      .searchLogs(10, 0)
+      .searchLogs(LOGS_PER_PAGE, 0)
       .then((response) => {
         setStateFetchLogs(false);
         setAllLogs(response.data[0].records);
         setTotalLogs(response.data[0].total[0].count);
+        setScrollEnabled(true);
       })
       .catch(() => {
         getFailToast("Can't fetch logs, please contact the administrator.");
         setStateFetchLogs(false);
+        setScrollEnabled(false);
       });
+  };
+
+  const handleLazyLoad = async (e) => {
+    if (allLogs.length > 0) {
+      const bottomLimit = e.realHeight - e.containerHeight <= e.topPosition;
+
+      if (bottomLimit && scrollEnabled) {
+        const extendedList = await offer.searchLogs(LOGS_PER_PAGE, LOG_OFFSET);
+
+        if (extendedList.data[0].records.length > 0) {
+          setAllLogs([...allLogs, ...extendedList.data[0].records]);
+          setCurrentLogPage(currentLogPage + 1);
+        } else {
+          setScrollEnabled(false);
+        }
+      }
+    }
   };
 
   useEffect(() => {
     fetchAllOffers();
-    fetchAllLogs();
   }, [localUpdate, update, currentOfferPage]);
+
+  useEffect(() => {
+    fetchAllLogs();
+  }, [localUpdate, update]);
 
   const addOfferFormMarkup = (
     <div className="form-wrapper">
@@ -314,7 +344,7 @@ const Offers = ({ update }) => {
                 Add offer
               </Button>
             </div>
-            <div className="scroll" hidden={stateFetchOffers}>
+            <ScrollArea smoothScrolling={true} hidden={stateFetchOffers}>
               {allOffers && allOffers.length > 0
                 ? allOffers.map((offer, index) => {
                     return (
@@ -334,7 +364,7 @@ const Offers = ({ update }) => {
                     );
                   })
                 : "No available offers."}
-            </div>
+            </ScrollArea>
             <div className="offers-pagination">
               <Button
                 size="md"
@@ -366,7 +396,11 @@ const Offers = ({ update }) => {
             <p style={{ textAlign: "center" }} className="Card-Heading">
               User activity
             </p>
-            <div className="scroll" style={{ height: "100%", width: "100%" }}>
+            <ScrollArea
+              smoothScrolling={true}
+              onScroll={(e) => handleLazyLoad(e)}
+              style={{ height: "100%", width: "100%" }}
+            >
               {allLogs && allLogs.length > 0
                 ? allLogs.map((log, index) => {
                     return (
@@ -378,7 +412,7 @@ const Offers = ({ update }) => {
                     );
                   })
                 : "No logs available."}
-            </div>
+            </ScrollArea>
           </div>
         </BlockUi>
       </div>

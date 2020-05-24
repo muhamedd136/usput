@@ -1,15 +1,15 @@
-import { getSuccessToast, getFailToast } from "../../shared/utils";
-import { InfiniteScroll } from "react-simple-infinite-scroll";
 import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
 import { getSessionCache } from "../../shared/utils";
 import Avatar from "../../components/Avatar/Avatar";
 import React, { useState, useEffect } from "react";
+import { getFailToast } from "../../shared/utils";
+import ScrollArea from "react-scrollbar";
+import { Button } from "react-bootstrap";
 import BlockUi from "react-block-ui";
 import { profile } from "../../api";
 import "react-block-ui/style.css";
 import "./Profile.scss";
-import { Button } from "react-bootstrap";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
@@ -114,21 +114,51 @@ const Profile = () => {
       });
   };
 
+  /** infinite scroll */
+  const LOGS_PER_PAGE = 30;
+  const TOTAL_LOG_PAGES = Math.ceil(totalLogs / LOGS_PER_PAGE);
+  const [scrollEnabled, setScrollEnabled] = useState(false);
+  const [currentLogPage, setCurrentLogPage] = useState(1);
+  const LOG_OFFSET = LOGS_PER_PAGE * currentLogPage - LOGS_PER_PAGE;
+
   const fetchUserLogs = async () => {
     setStateUserLogs(true);
     await profile
-      .getProfileLogs(getSessionCache().username, 30, 0)
+      .getProfileLogs(getSessionCache().username, LOGS_PER_PAGE, 0)
       .then((response) => {
         setStateUserLogs(false);
         setProfileLogs([...profileLogs, ...response.data[0].records]);
         setTotalLogs(response.data[0].total[0].count);
+        setScrollEnabled(true);
       })
       .catch((error) => {
         getFailToast(
           "Could not fetch offers, please contact the administrator."
         );
         setStateUserLogs(false);
+        setScrollEnabled(false);
       });
+  };
+
+  const handleLazyLoad = async (e) => {
+    if (profileLogs.length > 0) {
+      const bottomLimit = e.realHeight - e.containerHeight <= e.topPosition;
+
+      if (bottomLimit && scrollEnabled) {
+        const extendedList = await profile.getProfileLogs(
+          getSessionCache().username,
+          LOGS_PER_PAGE,
+          LOG_OFFSET
+        );
+
+        if (extendedList.data[0].records.length > 0) {
+          setProfileLogs([...profileLogs, ...extendedList.data[0].records]);
+          setCurrentLogPage(currentLogPage + 1);
+        } else {
+          setScrollEnabled(false);
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -172,7 +202,10 @@ const Profile = () => {
             hidden={stateUserOffers}
           >
             <p className="Card-Heading">Your offers</p>
-            <div className="scroll" style={{ height: "100%", width: "100%" }}>
+            <ScrollArea
+              smoothScrolling={true}
+              style={{ height: "100%", width: "100%" }}
+            >
               {profileOffers && profileOffers.length > 0
                 ? profileOffers.map((offer, index) => {
                     return (
@@ -191,7 +224,7 @@ const Profile = () => {
                     );
                   })
                 : "No available offers."}
-            </div>
+            </ScrollArea>
             <div className="offers-pagination">
               <Button
                 size="md"
@@ -221,7 +254,11 @@ const Profile = () => {
             hidden={stateUserLogs}
           >
             <p className="Card-Heading">Your activity</p>
-            <div style={{ width: "100%", height: "100%" }} className="scroll">
+            <ScrollArea
+              style={{ width: "100%", height: "100%" }}
+              smoothScrolling={true}
+              onScroll={(e) => handleLazyLoad(e)}
+            >
               {profileLogs && profileLogs.length > 0
                 ? profileLogs.map((log, index) => {
                     return (
@@ -233,7 +270,7 @@ const Profile = () => {
                     );
                   })
                 : "No logs available."}
-            </div>
+            </ScrollArea>
           </div>
         </BlockUi>
       </div>
