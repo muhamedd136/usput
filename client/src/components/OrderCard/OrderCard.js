@@ -119,18 +119,18 @@ const OrderCard = (props) => {
 			{generateModal(
 				cancelAppliedModalShow,
 				handleCancelAppliedModalShow,
-				"Cancel application",
+				"Confirm",
 				"Are you sure you want to cancel this application?",
 				cancelApplication,
-				"Cancel Application"
+				"Confirm"
 			)}
 			{generateModal(
 				acceptRequestedModalShow,
 				handleAcceptRequestedModalShow,
-				"Accept application",
+				"Confirm",
 				"Are you sure you want to accept this application?",
 				completeOrder,
-				"Accept application"
+				"Confirm"
 			)}
 			<div className="OrderCard-firstRow">
 				<p>
