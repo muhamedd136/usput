@@ -43,10 +43,6 @@ const OrderCard = (props) => {
     isRemoved: isRemoved,
   });
 
-  const logApplierUsername = () => {
-    console.log(applierUsername);
-  };
-
   let dateApplied = new Date(applied).toLocaleString("en-US");
   let dateCreated = new Date(created).toLocaleString("en-US");
   let completed = new Date(dateCompleted).toLocaleString("en-US");
@@ -200,7 +196,7 @@ const OrderCard = (props) => {
               </Button>
             ) : (
               <p>
-                <span onClick={logApplierUsername}>Applier: </span>{" "}
+                <span>Applier: </span>{" "}
                 <a href={`/profile/${applierId}`}>
                   {applierUsername && applierUsername}
                 </a>
@@ -210,7 +206,7 @@ const OrderCard = (props) => {
         ) : (
           <>
             <p>
-              <span onClick={logApplierUsername}>Applier:</span>{" "}
+              <span>Applier:</span>{" "}
               <a href={`/profile/${applierId}`}>
                 {applierUsername && applierUsername}
               </a>

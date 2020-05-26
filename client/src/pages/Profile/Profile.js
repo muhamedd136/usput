@@ -19,7 +19,6 @@ import "./Profile.scss";
 
 const Profile = (props) => {
   const urlUserId = props.match.params.username;
-  console.log(urlUserId);
 
   const [profileData, setProfileData] = useState({
     id: 0,
@@ -231,7 +230,6 @@ const Profile = (props) => {
     await profile
       .getUserMember(urlUserId ? urlUserId : getSessionCache()._id)
       .then((response) => {
-        console.log(response);
         setProfileData({
           ...profileData,
           id: response.data._id,

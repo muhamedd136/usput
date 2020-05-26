@@ -130,7 +130,6 @@ const OfferCard = (props) => {
       await offer
         .update(id, editOfferData)
         .then(() => {
-          console.log("Successfuly updated offer.");
           getSuccessToast("Successfuly updated offer.");
           setStateModal(false);
           handleEditModalShow();
@@ -141,7 +140,6 @@ const OfferCard = (props) => {
             "Offer failed to be updated, please contact the administrator."
           );
           setStateModal(false);
-          console.log("Could not update offer, please try again.");
         });
     } else {
       console.error("FORM INVALID - CHECK ALL FIELDS");

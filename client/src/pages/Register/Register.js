@@ -37,7 +37,6 @@ const Register = (props) => {
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
-    console.log(form.checkValidity());
 
     if (
       form.checkValidity() === false &&
