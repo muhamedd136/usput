@@ -18,17 +18,6 @@ class LogStore extends BaseStore {
     let limit = Number(req.query.limit) || 5;
     let offset = Number(req.query.offset) || 0;
 
-    // this.db.logs
-    //   .find({ username: username })
-    //   .sort({ created: -1 })
-    //   .skip(offset)
-    //   .limit(limit, (err, docs) => {
-    //     if (err) {
-    //       console.log(err.errmsg);
-    //     }
-    //     res.json(docs);
-    //   });
-
     this.db.logs.aggregate(
       [
         {
@@ -78,17 +67,6 @@ class LogStore extends BaseStore {
         res.json(docs);
       }
     );
-
-    // this.db.logs
-    //   .find({})
-    //   .sort({ created: -1 })
-    //   .skip(offset)
-    //   .limit(limit, (error, docs) => {
-    //     if (error) {
-    //       throw error;
-    //     }
-    //     res.json(docs);
-    //   });
   }
 }
 

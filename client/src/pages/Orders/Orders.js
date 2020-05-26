@@ -160,6 +160,9 @@ const Orders = ({ update }) => {
       });
   };
 
+  console.log(requestedOffers);
+  console.log(appliedOffers);
+
   const fetchCompletedOffers = async () => {
     setStateOrdersCard(true);
     await order

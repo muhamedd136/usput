@@ -17,7 +17,10 @@ import {
 } from "../../shared/utils";
 import "./Profile.scss";
 
-const Profile = () => {
+const Profile = (props) => {
+  const urlUserId = props.match.params.username;
+  console.log(urlUserId);
+
   const [profileData, setProfileData] = useState({
     id: 0,
     username: "",
@@ -226,8 +229,9 @@ const Profile = () => {
   const fetchProfileData = async () => {
     setStateProfile(true);
     await profile
-      .getUserMember(getSessionCache()._id)
+      .getUserMember(urlUserId ? urlUserId : getSessionCache()._id)
       .then((response) => {
+        console.log(response);
         setProfileData({
           ...profileData,
           id: response.data._id,
@@ -237,7 +241,7 @@ const Profile = () => {
           lastName: response.data.lastName,
           email: response.data.email,
           address: response.data.address
-            ? response.address
+            ? response.data.address
             : "No entered address",
           zipCode: response.data.zipCode
             ? response.data.zipCode
@@ -252,11 +256,10 @@ const Profile = () => {
         });
         setStateProfile(false);
       })
-      .catch((error) => {
+      .catch(() => {
         getFailToast(
           "Could not fetch user information, please contact the administrator."
         );
-        console.log(error);
         setStateProfile(false);
       });
   };
@@ -264,7 +267,11 @@ const Profile = () => {
   const fetchUserOffers = async () => {
     setStateUserOffers(true);
     await profile
-      .getProfileOffers(getSessionCache()._id, ROWS_PER_PAGE, OFFSET)
+      .getProfileOffers(
+        urlUserId ? urlUserId : getSessionCache()._id,
+        ROWS_PER_PAGE,
+        OFFSET
+      )
       .then((response) => {
         setStateUserOffers(false);
         setProfileOffers(response.data[0].records);
@@ -288,7 +295,11 @@ const Profile = () => {
   const fetchUserLogs = async () => {
     setStateUserLogs(true);
     await profile
-      .getProfileLogs(getSessionCache().username, LOGS_PER_PAGE, 0)
+      .getProfileLogs(
+        urlUserId ? profileData.username : getSessionCache().username,
+        LOGS_PER_PAGE,
+        0
+      )
       .then((response) => {
         setStateUserLogs(false);
         setProfileLogs([...profileLogs, ...response.data[0].records]);
@@ -310,7 +321,7 @@ const Profile = () => {
 
       if (bottomLimit && scrollEnabled) {
         const extendedList = await profile.getProfileLogs(
-          getSessionCache().username,
+          urlUserId ? profileData.username : getSessionCache().username,
           LOGS_PER_PAGE,
           LOG_OFFSET
         );
@@ -331,8 +342,11 @@ const Profile = () => {
 
   useEffect(() => {
     fetchProfileData();
-    fetchUserLogs();
   }, []);
+
+  useEffect(() => {
+    fetchUserLogs();
+  }, [profileData.username]);
 
   const editProfileFormMarkup = (
     <div className="form-wrapper">

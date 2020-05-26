@@ -167,7 +167,7 @@ const OfferCard = (props) => {
         isRemoved: isRemoved,
       })
       .then(() => {
-        getSuccessToast("Successfuly updated offer.");
+        getSuccessToast("Successfuly applied to offer.");
         updateOfferList();
         handleApplyModalShow();
         setStateModal(false);
@@ -369,7 +369,8 @@ const OfferCard = (props) => {
       </div>
       <div className="OfferCard-thirdRow">
         <p>
-          <span>Offerer:</span> {username && username}
+          <span>Offerer:</span>{" "}
+          <a href={`/profile/${userId}`}>{username && username}</a>
         </p>
         <p>
           <span>Status: </span> {status && status}
