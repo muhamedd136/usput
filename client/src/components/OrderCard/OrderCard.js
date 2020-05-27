@@ -116,13 +116,13 @@ const OrderCard = (props) => {
           <Modal.Body>{text}</Modal.Body>
           <Modal.Footer>
             <Button
-              size="sm"
+              size="md"
               variant="outline-danger"
               onClick={handleShowModal}
             >
               Close
             </Button>
-            <Button size="sm" variant="info" onClick={onSubmit}>
+            <Button size="md" variant="info" onClick={onSubmit}>
               {confirmationButtonText}
             </Button>
           </Modal.Footer>

@@ -201,18 +201,21 @@ const Orders = ({ update }) => {
             <div className="Orders-CardButtons">
               <ButtonGroup vertical={window.innerWidth <= 575 ? true : false}>
                 <Button
+                  size="md"
                   variant={selected !== 0 ? "outline-info" : "info"}
                   onClick={handleApplyTabOpen}
                 >
                   Applied
                 </Button>
                 <Button
+                  size="md"
                   variant={selected !== 1 ? "outline-info" : "info"}
                   onClick={handleRequestTabOpen}
                 >
                   Requested
                 </Button>
                 <Button
+                  size="md"
                   variant={selected !== 2 ? "outline-info" : "info"}
                   onClick={handleCompletedTabOpen}
                 >

@@ -507,7 +507,7 @@ const Profile = (props) => {
             Close
           </Button>
           <Button size="md" variant="info" onClick={submitEditForm}>
-            Save changes
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

@@ -181,7 +181,7 @@ const Register = (props) => {
           </Form.Group>
           <Form.Group>
             {isLoading ? (
-              <Spinner size="sm" variant="info" animation="grow" />
+              <Spinner size="md" variant="info" animation="grow" />
             ) : (
               <Button block={true} size="md" variant="info" type="submit">
                 Register

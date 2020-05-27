@@ -330,7 +330,7 @@ const Offers = ({ update }) => {
               Close
             </Button>
             <Button size="md" variant="info" onClick={handleSubmit}>
-              Apply
+              Save
             </Button>
           </Modal.Footer>
         </BlockUi>
@@ -340,7 +340,7 @@ const Offers = ({ update }) => {
           <div className="offers-card">
             <div className="offers-headingAndButton">
               <p className="Card-Heading">Offers</p>
-              <Button variant="info" onClick={handleModalShow}>
+              <Button size="md" variant="info" onClick={handleModalShow}>
                 Add offer
               </Button>
             </div>

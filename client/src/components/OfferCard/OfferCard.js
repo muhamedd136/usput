@@ -290,13 +290,13 @@ const OfferCard = (props) => {
           <Modal.Body>Are you sure you want to apply to this offer?</Modal.Body>
           <Modal.Footer>
             <Button
-              size="sm"
+              size="md"
               variant="outline-danger"
               onClick={handleApplyModalShow}
             >
               Close
             </Button>
-            <Button size="sm" variant="info" onClick={applyToOffer}>
+            <Button size="md" variant="info" onClick={applyToOffer}>
               Apply
             </Button>
           </Modal.Footer>
@@ -313,13 +313,13 @@ const OfferCard = (props) => {
           </Modal.Body>
           <Modal.Footer>
             <Button
-              size="sm"
+              size="md"
               variant="outline-info"
               onClick={handleDeleteModalShow}
             >
               Close
             </Button>
-            <Button size="sm" variant="danger" onClick={deleteOffer}>
+            <Button size="md" variant="danger" onClick={deleteOffer}>
               Delete
             </Button>
           </Modal.Footer>

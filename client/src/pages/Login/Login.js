@@ -23,6 +23,12 @@ const Login = (props) => {
     });
   };
 
+  const handleEnterKeyDown = (event) => {
+    if (event.key === "Enter") {
+      submitForm();
+    }
+  };
+
   const signIn = () => {
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       window.location = "http://localhost:2000/login/google";
@@ -66,7 +72,7 @@ const Login = (props) => {
     <div className="Login row">
       <div className="col-md-8 LoginLayout-left">
         <div className="Login-header">Login</div>
-        <form className="Login-form">
+        <form onKeyDown={handleEnterKeyDown} className="Login-form">
           <div className="Input-group">
             <label className="Input-label">Username</label>
             <input
@@ -94,11 +100,11 @@ const Login = (props) => {
               Don't have an account? <Link to="/register">Register here!</Link>
             </div>
             {isLoading ? (
-              <Spinner size="sm" variant="info" animation="grow" />
+              <Spinner size="md" variant="info" animation="grow" />
             ) : (
               <Button
                 block={true}
-                size="sm"
+                size="md"
                 variant="info"
                 onClick={submitForm}
               >
@@ -106,11 +112,11 @@ const Login = (props) => {
               </Button>
             )}
             {isLoading ? (
-              <Spinner size="sm" variant="info" animation="grow" />
+              <Spinner size="md" variant="info" animation="grow" />
             ) : (
               <Button
                 block={true}
-                size="sm"
+                size="md"
                 variant="secondary"
                 onClick={signIn}
               >
