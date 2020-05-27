@@ -85,3 +85,19 @@
     }
   }
 }
+
+@media screen and (max-height: 500px) {
+  .Login {
+    .LoginLayout-left {
+      height: 100%;
+
+      .Login-form {
+        width: 100%;
+      }
+    }
+
+    .LoginLayout-right {
+      display: none;
+    }
+  }
+}

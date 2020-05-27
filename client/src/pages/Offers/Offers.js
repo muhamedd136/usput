@@ -182,7 +182,9 @@ const Offers = ({ update }) => {
       .then((response) => {
         setStateFetchOffers(false);
         setAllOffers(response.data[0].records);
-        setTotalOffers(response.data[0].total[0].count);
+        setTotalOffers(
+          response.data[0].total.length ? response.data[0].total[0].count : 1
+        );
       })
       .catch(() => {
         getFailToast("Can't fetch offers, please contact the administrator.");
@@ -204,7 +206,9 @@ const Offers = ({ update }) => {
       .then((response) => {
         setStateFetchLogs(false);
         setAllLogs(response.data[0].records);
-        setTotalLogs(response.data[0].total[0].count);
+        setTotalLogs(
+          response.data[0].total.length ? response.data[0].total[0].count : 1
+        );
         setScrollEnabled(true);
       })
       .catch(() => {
@@ -344,7 +348,11 @@ const Offers = ({ update }) => {
                 Add offer
               </Button>
             </div>
-            <ScrollArea smoothScrolling={true} hidden={stateFetchOffers}>
+            <ScrollArea
+              style={{ height: "100%" }}
+              smoothScrolling={true}
+              hidden={stateFetchOffers}
+            >
               {allOffers && allOffers.length > 0
                 ? allOffers.map((offer, index) => {
                     return (
