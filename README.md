@@ -22,13 +22,7 @@ Entities: Users, Transactions, Offers, Orders, Logs.
 - Users can create, view, accept and complete offers
 - Ability to view your profile and offers on profile
 - Alternative sign-in options
-- Review offers and leave ratings after offer completion
-- Ability to filter offers by multiple parameters
 - Ability to edit your profile and view other users’ profiles
-- User can gain achievements based on different metrics
-- Ability to track packages and delivery progress
-- Multiple ways of authentication
-- Ability to search users and offers
 
 ## Technologies
 

@@ -9,13 +9,21 @@ const Header = (props) => {
 
   return (
     <div className="header">
-      <Modal show={modalShow} className="signout_modal">
-        <Modal.Header>Logout</Modal.Header>
+      <Modal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        className="signout_modal"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Logout</Modal.Title>
+        </Modal.Header>
         <Modal.Body>Are you sure you want to sign out from Usput?</Modal.Body>
         <Modal.Footer>
           <div className="modal-buttons">
             <Button
-              variant="outline-danger"
+              size="md"
+              variant="danger"
               onClick={() => {
                 setModalShow(false);
               }}
@@ -23,6 +31,7 @@ const Header = (props) => {
               NO
             </Button>
             <Button
+              size="md"
               variant="info"
               onClick={() => {
                 localStorage.removeItem("access_token");
@@ -42,7 +51,7 @@ const Header = (props) => {
             <div className="navBase-logo">
               <a
                 target="_blank"
-                href="https://www.github.com/muhamedd136/Course-Project"
+                href="https://www.github.com/muhamedd136/usput"
                 rel="noopener noreferrer"
               >
                 <img src={logo} alt="" />

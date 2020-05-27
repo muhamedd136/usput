@@ -1,9 +1,18 @@
 import { updateOfferList } from "../../redux/offers/actions";
-import { Button, Form, Modal } from "react-bootstrap";
 import { getSessionCache } from "../../shared/utils";
+import { Button, Modal } from "react-bootstrap";
 import { order, offer } from "../../api";
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import BlockUi from "react-block-ui";
+import "react-block-ui/style.css";
+import {
+  getSuccessToast,
+  validateAddress,
+  getFailToast,
+  validateName,
+  formValid,
+} from "../../shared/utils";
 import "./OfferCard.scss";
 
 const OfferCard = (props) => {
@@ -22,7 +31,9 @@ const OfferCard = (props) => {
   } = props;
 
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [applyModalShow, setApplyModalShow] = useState(false);
   const [editModalShow, setEditModalShow] = useState(false);
+
   const [editOfferData, setEditOfferData] = useState({
     userId: userId,
     username: username,
@@ -34,12 +45,67 @@ const OfferCard = (props) => {
     status: status,
     isRemoved: false,
   });
+  const [errors, setErrors] = useState({
+    name: "",
+    price: "",
+    startingLocation: "",
+    endingLocation: "",
+  });
+
+  const [stateModal, setStateModal] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
 
   const handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "name":
+        setErrors({
+          ...errors,
+          [name]:
+            value.length < 3
+              ? "Minimum 3 characaters required"
+              : validateName(value) === false
+              ? "Enter a valid name"
+              : "",
+        });
+        break;
+      case "price":
+        setErrors({
+          ...errors,
+          [name]: value.length < 0 ? "Enter a positive value" : "",
+        });
+        break;
+      case "startingLocation":
+        setErrors({
+          ...errors,
+          [name]:
+            value.length < 5
+              ? "Minimum 5 characaters required"
+              : validateAddress(value) === false
+              ? "Enter a valid address"
+              : "",
+        });
+        break;
+      case "endingLocation":
+        setErrors({
+          ...errors,
+          [name]:
+            validateAddress(value) === false && value.length < 5
+              ? "Minimum 5 characaters required"
+              : validateAddress(value) === false
+              ? "Enter a valid address"
+              : "",
+        });
+        break;
+      default:
+        break;
+    }
+
     setEditOfferData({
       ...editOfferData,
-      [event.target.name]: [event.target.value],
+      [name]: value,
     });
   };
 
@@ -47,34 +113,42 @@ const OfferCard = (props) => {
     setDeleteModalShow(!deleteModalShow);
   };
 
+  const handleApplyModalShow = () => {
+    setApplyModalShow(!applyModalShow);
+  };
+
   const handleEditModalShow = () => {
     setEditModalShow(!editModalShow);
   };
 
-  const submitEditForm = async () => {
-    if (
-      editOfferData.name.length === 0 ||
-      editOfferData.price.length === 0 ||
-      editOfferData.startingLocation.length === 0 ||
-      editOfferData.endingLocation.length === 0
-    ) {
-      setIsEmpty(true);
-      return;
-    } else {
-      setIsEmpty(false);
+  const submitEditForm = async (event) => {
+    event.preventDefault();
 
+    if (formValid(errors, { name, price, startingLocation, endingLocation })) {
+      setIsEmpty(false);
+      setStateModal(true);
       await offer
         .update(id, editOfferData)
         .then(() => {
-          console.log("Successfuly updated offer.");
+          getSuccessToast("Successfuly updated offer.");
+          setStateModal(false);
+          handleEditModalShow();
           updateOfferList();
         })
-        .catch(() => console.log("Could not update offer, please try again."));
+        .catch(() => {
+          getFailToast(
+            "Offer failed to be updated, please contact the administrator."
+          );
+          setStateModal(false);
+        });
+    } else {
+      console.error("FORM INVALID - CHECK ALL FIELDS");
+      setIsEmpty(true);
     }
-    handleEditModalShow();
   };
 
   const applyToOffer = async () => {
+    setStateModal(true);
     await order
       .create({
         offererId: userId,
@@ -91,13 +165,21 @@ const OfferCard = (props) => {
         isRemoved: isRemoved,
       })
       .then(() => {
-        console.log("Successfuly applied to an offer");
+        getSuccessToast("Successfuly applied to offer.");
         updateOfferList();
+        handleApplyModalShow();
+        setStateModal(false);
       })
-      .catch(() => console.log("Can't apply, try again."));
+      .catch(() => {
+        getFailToast(
+          "Failed to apply to offer, please contact the administrator."
+        );
+        setStateModal(false);
+      });
   };
 
   const deleteOffer = async () => {
+    setStateModal(true);
     await offer
       .delete(id, {
         userId: userId,
@@ -111,94 +193,157 @@ const OfferCard = (props) => {
         isRemoved: true,
       })
       .then(() => {
-        console.log("Offer successfuly deleted.");
+        getSuccessToast("Offer successfuly deleted.");
+        setStateModal(false);
+        handleDeleteModalShow();
         updateOfferList();
       })
-      .catch(() => console.log("Could not delete offer, try again."));
-    handleDeleteModalShow();
+      .catch(() => {
+        setStateModal(false);
+        getFailToast(
+          "Failed to delete offer, please contact the administrator."
+        );
+      });
   };
 
   const editOfferFormMarkup = (
-    <Form>
-      <Form.Group controlId="name">
-        <Form.Label>Name</Form.Label>
-        <Form.Control
+    <div className="form-wrapper">
+      <div className="form-group">
+        <label className="input-label">Name</label>
+        <input
+          className={
+            errors.name.length > 0 ? "input-field input-error" : "input-field"
+          }
           type="text"
+          placeholder="Name"
           name="name"
+          onChange={handleChange}
           value={editOfferData.name}
-          onChange={handleChange}
         />
-      </Form.Group>
-      <Form.Group controlId="price">
-        <Form.Label>Price</Form.Label>
-        <Form.Control
+        {errors.name.length > 0 && (
+          <span className="input-errorMessage">{errors.name}</span>
+        )}
+      </div>
+      <div className="form-group">
+        <label className="input-label">Price</label>
+        <input
+          className={
+            errors.price < 0 ? "input-field input-error" : "input-field"
+          }
           type="number"
+          placeholder="Price"
           name="price"
+          onChange={handleChange}
           value={editOfferData.price}
-          onChange={handleChange}
+          min={0}
         />
-      </Form.Group>
-      <Form.Group controlId="startingLocation">
-        <Form.Label>Starting address</Form.Label>
-        <Form.Control
+        {errors.price.length > 0 && (
+          <span className="input-errorMessage">{errors.price}</span>
+        )}
+      </div>
+      <div className="form-group">
+        <label className="input-label">Starting address</label>
+        <input
+          className={
+            errors.startingLocation.length > 0
+              ? "input-field input-error"
+              : "input-field"
+          }
           type="text"
+          placeholder="Starting address"
           name="startingLocation"
+          onChange={handleChange}
           value={editOfferData.startingLocation}
-          onChange={handleChange}
         />
-      </Form.Group>
-      <Form.Group controlId="endingAddress">
-        <Form.Label>Ending address</Form.Label>
-        <Form.Control
+        {errors.startingLocation.length > 0 && (
+          <span className="input-errorMessage">{errors.startingLocation}</span>
+        )}
+      </div>
+      <div className="form-group">
+        <label className="input-label">Ending address</label>
+        <input
+          className={
+            errors.endingLocation.length > 0
+              ? "input-field input-error"
+              : "input-field"
+          }
           type="text"
+          placeholder="Ending address"
           name="endingLocation"
-          value={editOfferData.endingLocation}
           onChange={handleChange}
+          value={editOfferData.endingLocation}
         />
-      </Form.Group>
-    </Form>
+        {errors.endingLocation.length > 0 && (
+          <span className="input-errorMessage">{errors.endingLocation}</span>
+        )}
+      </div>
+    </div>
   );
 
   return (
     <div className="OfferCard">
+      <Modal centered show={applyModalShow} onHide={handleApplyModalShow}>
+        <BlockUi tag="div" blocking={stateModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Apply to offer</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to apply to this offer?</Modal.Body>
+          <Modal.Footer>
+            <Button
+              size="md"
+              variant="outline-danger"
+              onClick={handleApplyModalShow}
+            >
+              Close
+            </Button>
+            <Button size="md" variant="info" onClick={applyToOffer}>
+              Apply
+            </Button>
+          </Modal.Footer>
+        </BlockUi>
+      </Modal>
       <Modal centered show={deleteModalShow} onHide={handleDeleteModalShow}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete offer</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete this offer? There is no going back if
-          you accept.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            size="sm"
-            variant="outline-info"
-            onClick={handleDeleteModalShow}
-          >
-            Close
-          </Button>
-          <Button size="sm" variant="danger" onClick={deleteOffer}>
-            Delete
-          </Button>
-        </Modal.Footer>
+        <BlockUi tag="div" blocking={stateModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete offer</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to delete this offer? There is no going back
+            if you accept.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              size="md"
+              variant="outline-info"
+              onClick={handleDeleteModalShow}
+            >
+              Close
+            </Button>
+            <Button size="md" variant="danger" onClick={deleteOffer}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </BlockUi>
       </Modal>
       <Modal centered show={editModalShow} onHide={handleEditModalShow}>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit offer</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{editOfferFormMarkup}</Modal.Body>
-        <Modal.Footer>
-          <Button
-            size="sm"
-            variant="outline-info"
-            onClick={handleEditModalShow}
-          >
-            Close
-          </Button>
-          <Button size="sm" variant="info" onClick={submitEditForm}>
-            Save
-          </Button>
-        </Modal.Footer>
+        <BlockUi tag="div" blocking={stateModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit offer</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{editOfferFormMarkup}</Modal.Body>
+          <Modal.Footer>
+            <Button
+              size="md"
+              variant="outline-danger"
+              onClick={handleEditModalShow}
+            >
+              Close
+            </Button>
+            <Button size="md" variant="info" onClick={submitEditForm}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </BlockUi>
       </Modal>
       <div className="OfferCard-firstRow">
         <p>
@@ -222,7 +367,8 @@ const OfferCard = (props) => {
       </div>
       <div className="OfferCard-thirdRow">
         <p>
-          <span>Offerer:</span> {username && username}
+          <span>Offerer:</span>{" "}
+          <a href={`/profile/${userId}`}>{username && username}</a>
         </p>
         <p>
           <span>Status: </span> {status && status}
@@ -245,7 +391,11 @@ const OfferCard = (props) => {
             </Button>
           </div>
         ) : (
-          <Button size="sm" variant="outline-info" onClick={applyToOffer}>
+          <Button
+            size="sm"
+            variant="outline-info"
+            onClick={handleApplyModalShow}
+          >
             Apply
           </Button>
         )}
