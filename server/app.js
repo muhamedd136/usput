@@ -129,7 +129,7 @@ app.get("/login/google", (req, res) => {
                   data.given_name.toLowerCase() +
                   "_" +
                   data.family_name.toLowerCase(),
-                avatar: [data.picture],
+                avatar: data.picture,
                 email: data.email,
                 firstName: data.given_name,
                 lastName: data.family_name,

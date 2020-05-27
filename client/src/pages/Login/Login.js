@@ -102,26 +102,25 @@ const Login = (props) => {
             {isLoading ? (
               <Spinner size="md" variant="info" animation="grow" />
             ) : (
-              <Button
-                block={true}
-                size="md"
-                variant="info"
-                onClick={submitForm}
-              >
-                Login
-              </Button>
-            )}
-            {isLoading ? (
-              <Spinner size="md" variant="info" animation="grow" />
-            ) : (
-              <Button
-                block={true}
-                size="md"
-                variant="secondary"
-                onClick={signIn}
-              >
-                Google Sign in
-              </Button>
+              <div style={{ width: "100%" }}>
+                <Button
+                  block={true}
+                  size="md"
+                  variant="info"
+                  onClick={submitForm}
+                >
+                  Sign in
+                </Button>
+
+                <Button
+                  block={true}
+                  size="md"
+                  variant="secondary"
+                  onClick={signIn}
+                >
+                  Google Sign in
+                </Button>
+              </div>
             )}
             {isFilled ? null : (
               <div className="Login-fail">Please fill out all fields.</div>

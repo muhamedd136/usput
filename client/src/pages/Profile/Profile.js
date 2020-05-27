@@ -1,6 +1,6 @@
+import { getSessionCache, formValid } from "../../shared/utils";
 import OfferCard from "../../components/OfferCard/OfferCard";
 import LogCard from "../../components/LogCard/LogCard";
-import { getSessionCache, formValid } from "../../shared/utils";
 import Avatar from "../../components/Avatar/Avatar";
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
@@ -587,7 +587,7 @@ const Profile = (props) => {
               <Button
                 size="md"
                 variant="info"
-                disabled={currentOfferPage === TOTAL_PAGES}
+                disabled={currentOfferPage === TOTAL_PAGES || TOTAL_PAGES === 0}
                 onClick={() => {
                   handleOfferPageChange("next");
                 }}
