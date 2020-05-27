@@ -254,7 +254,9 @@ const Profile = (props) => {
         });
         setStateProfile(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
+        console.error(error);
         getFailToast(
           "Could not fetch user information, please contact the administrator."
         );
@@ -273,7 +275,9 @@ const Profile = (props) => {
       .then((response) => {
         setStateUserOffers(false);
         setProfileOffers(response.data[0].records);
-        setTotalOffers(response.data[0].total[0].count);
+        setTotalOffers(
+          response.data[0].total.length ? response.data[0].total[0].count : 0
+        );
       })
       .catch(() => {
         getFailToast(
@@ -301,7 +305,9 @@ const Profile = (props) => {
       .then((response) => {
         setStateUserLogs(false);
         setProfileLogs([...profileLogs, ...response.data[0].records]);
-        setTotalLogs(response.data[0].total[0].count);
+        setTotalLogs(
+          response.data[0].total.length ? response.data[0].total[0].count : 0
+        );
         setScrollEnabled(true);
       })
       .catch(() => {
