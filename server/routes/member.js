@@ -7,6 +7,13 @@ module.exports = (router, db, mongojs, jwt, config) => {
 
 	let currentUser;
 
+	/** STORES */
+	let offerStore;
+	let transactionStore;
+	let userStore;
+	let logStore;
+	let orderStore;
+
 	/** AUTHENTICATION */
 	router.use((req, res, next) => {
 		console.log(`Member route accessed by: ${req.ip}`);
@@ -22,6 +29,11 @@ module.exports = (router, db, mongojs, jwt, config) => {
 					currentUser = decoded.username;
 					let userType = decoded.type;
 					if (userType == "Member") {
+						offerStore = new OfferStore(db, mongojs, currentUser);
+						transactionStore = new TransactionsStore(db, mongojs);
+						userStore = new UsersStore(db, mongojs, jwt, config);
+						logStore = new LogStore(db, mongojs, currentUser);
+						orderStore = new OrdersStore(db, mongojs);
 						next();
 					} else {
 						res.status(401).send("Unauthorized access, improper privileges.");
@@ -32,13 +44,6 @@ module.exports = (router, db, mongojs, jwt, config) => {
 			res.status(401).send("Unauthorized access.");
 		}
 	});
-
-	/** STORES */
-	const offerStore = new OfferStore(db, mongojs, currentUser);
-	const transactionStore = new TransactionsStore(db, mongojs);
-	const userStore = new UsersStore(db, mongojs, jwt, config);
-	const logStore = new LogStore(db, mongojs, currentUser);
-	const orderStore = new OrdersStore(db, mongojs);
 
 	/* USER ROUTES */
 
