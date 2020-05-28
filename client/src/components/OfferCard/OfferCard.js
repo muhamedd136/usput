@@ -33,6 +33,7 @@ const OfferCard = (props) => {
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [applyModalShow, setApplyModalShow] = useState(false);
   const [editModalShow, setEditModalShow] = useState(false);
+  const [stateModal, setStateModal] = useState(false);
 
   const [editOfferData, setEditOfferData] = useState({
     userId: userId,
@@ -51,9 +52,6 @@ const OfferCard = (props) => {
     startingLocation: "",
     endingLocation: "",
   });
-
-  const [stateModal, setStateModal] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -125,7 +123,6 @@ const OfferCard = (props) => {
     event.preventDefault();
 
     if (formValid(errors, { name, price, startingLocation, endingLocation })) {
-      setIsEmpty(false);
       setStateModal(true);
       await offer
         .update(id, editOfferData)
@@ -143,7 +140,6 @@ const OfferCard = (props) => {
         });
     } else {
       console.error("FORM INVALID - CHECK ALL FIELDS");
-      setIsEmpty(true);
     }
   };
 

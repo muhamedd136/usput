@@ -1,3 +1,131 @@
-.Register-Form {
-  width: 65%;
+// .Register-Form {
+//   width: 65%;
+// }
+
+// .Register-left {
+//   height: 100vh;
+//   background-color: white;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .Register-right {
+//   height: 100vh;
+//   background-color: teal;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// @media screen and (max-height: 750px) {
+//   .Register-right {
+//     display: none;
+//   }
+// }
+
+.Register {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+
+  .RegisterLayout-left {
+    height: 100vh;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .Register-header {
+      font-size: 32px;
+      font-weight: bold;
+      color: teal;
+    }
+
+    .Register-form {
+      padding: 15px;
+      width: 70%;
+    }
+
+    .Input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Input-label {
+      color: teal;
+      font-weight: bold;
+    }
+
+    .Input-input {
+      padding: 5px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      border-color: teal;
+      margin-bottom: 15px;
+      outline: none;
+    }
+
+    .Buttons-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      outline: none;
+    }
+
+    .Register-fail {
+      color: red;
+    }
+  }
+
+  .RegisterLayout-right {
+    height: 100vh;
+    background-color: teal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .Register-banner {
+      font-size: 40px;
+      font-weight: bold;
+      color: white;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .Register {
+    .RegisterLayout-left {
+      height: 100vh;
+
+      .Register-form {
+        width: 100%;
+      }
+    }
+
+    .RegisterLayout-right {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .Register {
+    .RegisterLayout-left {
+      height: 100%;
+
+      .Register-form {
+        width: 100%;
+      }
+    }
+
+    .RegisterLayout-right {
+      display: none;
+    }
+  }
 }

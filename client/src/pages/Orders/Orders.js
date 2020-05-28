@@ -129,7 +129,9 @@ const Orders = ({ update }) => {
       .then((response) => {
         setStateOrdersCard(false);
         setAppliedOffers(response.data[0].records);
-        setTotalAppliedOffers(response.data[0].total[0].count);
+        setTotalAppliedOffers(
+          response.data[0].total.length ? response.data[0].total[0].count : 1
+        );
       })
       .catch(() => {
         setStateOrdersCard(false);
@@ -150,7 +152,9 @@ const Orders = ({ update }) => {
       .then((response) => {
         setStateOrdersCard(false);
         setRequestedOffers(response.data[0].records);
-        setTotalRequestedOffers(response.data[0].total[0].count);
+        setTotalRequestedOffers(
+          response.data[0].total.length ? response.data[0].total[0].count : 1
+        );
       })
       .catch(() => {
         setStateOrdersCard(false);
@@ -171,7 +175,9 @@ const Orders = ({ update }) => {
       .then((response) => {
         setStateOrdersCard(false);
         setCompletedOffers(response.data[0].records);
-        setTotalCompletedOffers(response.data[0].total[0].count);
+        setTotalCompletedOffers(
+          response.data[0].total.length ? response.data[0].total[0].count : 1
+        );
       })
       .catch(() => {
         setStateOrdersCard(false);

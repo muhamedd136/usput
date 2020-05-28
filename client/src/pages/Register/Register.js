@@ -23,20 +23,30 @@ const Register = (props) => {
     repeatPassword,
   } = registerData;
 
-  const [registrationFail, setRegistrationFail] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
-  const [isFilled, setIsFilled] = useState(true);
 
   const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    if (name === "repeatPassword") {
+      setPasswordMatch(value === password);
+    }
+
     setRegisterData({
       ...registerData,
-      [event.target.name]: event.target.value,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
+
+    if (password !== repeatPassword) {
+      setPasswordMatch(false);
+      return;
+    }
 
     if (
       form.checkValidity() === false &&
@@ -66,18 +76,16 @@ const Register = (props) => {
         setIsLoading(false);
         props.history.push("/login");
       })
-      .catch(() => {
-        setIsLoading(false);
-        setRegistrationFail(true);
-      });
+      .catch(() => {});
+    setIsLoading(false);
   };
 
   return (
-    <div className="Login row">
-      <div className="col-md-8 LoginLayout-left">
-        <div className="Login-header">Register</div>
+    <div className="Register row">
+      <div className="col-md-8 RegisterLayout-left">
+        <div className="Register-header">Register</div>
         <Form
-          className="Register-Form"
+          className="Register-form"
           noValidate
           validated={validated}
           onSubmit={handleSubmit}
@@ -170,9 +178,11 @@ const Register = (props) => {
               value={repeatPassword}
               onChange={handleChange}
             />
-            <Form.Control.Feedback type="invalid">
-              Passwords don't match.
-            </Form.Control.Feedback>
+            {passwordMatch ? null : (
+              <Form.Text className="text-danger">
+                Passwords don't match.
+              </Form.Text>
+            )}
           </Form.Group>
           <Form.Group>
             <Form.Label>
@@ -190,8 +200,8 @@ const Register = (props) => {
           </Form.Group>
         </Form>
       </div>
-      <div className="col-md-4 LoginLayout-right">
-        <div className="Login-banner">USPUT</div>
+      <div className="col-md-4 RegisterLayout-right">
+        <div className="Register-banner">USPUT</div>
       </div>
     </div>
   );

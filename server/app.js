@@ -145,6 +145,7 @@ app.get("/google/login", (req, res) => {
 								id: doc._id,
 								_id: doc._id,
 								type: doc.type,
+								username: doc.username,
 							},
 							process.env.JWT_SECRET || config.JWT_SECRET
 						);
