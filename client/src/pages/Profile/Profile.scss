@@ -33,7 +33,7 @@
   }
 
   .profile-image {
-    height: 20%;
+    height: 30%;
     width: 60%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 4px;
@@ -41,7 +41,7 @@
   }
 
   .user-info {
-    height: 80%;
+    height: 70%;
     margin: 10px 0;
     display: flex;
     flex-direction: column;
@@ -79,29 +79,29 @@
   align-items: center;
 }
 
-@media screen and (min-width: 375px) {
-  .profile {
-    .profile-image {
-      height: 25%;
-    }
+// @media screen and (min-width: 375px) {
+//   .profile {
+//     .profile-image {
+//       height: 25%;
+//     }
 
-    .user-info {
-      height: 75%;
-    }
-  }
-}
+//     .user-info {
+//       height: 75%;
+//     }
+//   }
+// }
 
-@media screen and (min-width: 425px) {
-  .profile {
-    .profile-image {
-      height: 30%;
-    }
+// @media screen and (min-width: 425px) {
+//   .profile {
+//     .profile-image {
+//       height: 30%;
+//     }
 
-    .user-info {
-      height: 70%;
-    }
-  }
-}
+//     .user-info {
+//       height: 70%;
+//     }
+//   }
+// }
 
 @media screen and (min-width: 768px) {
   .profile {
@@ -116,11 +116,11 @@
     }
 
     .profile-image {
-      height: 15%;
+      height: 20%;
     }
 
     .user-info {
-      height: 85%;
+      height: 80%;
     }
   }
 }
@@ -136,29 +136,11 @@
     .profile-cardContainer {
       padding: 20px 20px;
     }
-
-    .profile-image {
-      height: 20%;
-    }
-
-    .user-info {
-      height: 80%;
-    }
   }
 }
 
 @media screen and (min-width: 1920px) {
   .profile {
-    padding: 20px;
-
-    .profile-card {
-      height: calc(100vh - 133px);
-    }
-
-    .profile-cardContainer {
-      padding: 20px 20px;
-    }
-
     .profile-image {
       height: 30%;
     }

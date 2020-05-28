@@ -194,7 +194,6 @@ const Offers = ({ update }) => {
 
   /** infinite scroll */
   const LOGS_PER_PAGE = 30;
-  const TOTAL_LOG_PAGES = Math.ceil(totalLogs / LOGS_PER_PAGE);
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const [currentLogPage, setCurrentLogPage] = useState(1);
   const LOG_OFFSET = LOGS_PER_PAGE * currentLogPage - LOGS_PER_PAGE;
@@ -225,7 +224,10 @@ const Offers = ({ update }) => {
       if (bottomLimit && scrollEnabled) {
         const extendedList = await offer.searchLogs(LOGS_PER_PAGE, LOG_OFFSET);
 
-        if (extendedList.data[0].records.length > 0) {
+        if (
+          extendedList.data[0].records.length > 0 &&
+          allLogs.length < totalLogs
+        ) {
           setAllLogs([...allLogs, ...extendedList.data[0].records]);
           setCurrentLogPage(currentLogPage + 1);
         } else {

@@ -28,7 +28,7 @@ const OrderCard = (props) => {
     id,
   } = props;
 
-  const [orderBody, setOrderBody] = useState({
+  const [orderBody] = useState({
     offererId: offererId,
     offererUsername: offererUsername,
     applierUsername: applierUsername,

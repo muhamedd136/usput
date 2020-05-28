@@ -289,7 +289,6 @@ const Profile = (props) => {
 
   /** infinite scroll */
   const LOGS_PER_PAGE = 30;
-  const TOTAL_LOG_PAGES = Math.ceil(totalLogs / LOGS_PER_PAGE);
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const [currentLogPage, setCurrentLogPage] = useState(1);
   const LOG_OFFSET = LOGS_PER_PAGE * currentLogPage - LOGS_PER_PAGE;
@@ -330,7 +329,10 @@ const Profile = (props) => {
           LOG_OFFSET
         );
 
-        if (extendedList.data[0].records.length > 0) {
+        if (
+          extendedList.data[0].records.length > 0 &&
+          profileLogs.length < totalLogs
+        ) {
           setProfileLogs([...profileLogs, ...extendedList.data[0].records]);
           setCurrentLogPage(currentLogPage + 1);
         } else {
