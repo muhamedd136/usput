@@ -18,9 +18,14 @@ Entities: Users, Transactions, Offers, Orders, Logs.
 
 ## Main features
 
+### V1.0
+
 - Ability to create user profile
 - Users can create, view, accept and complete offers
 - Ability to view your profile and offers on profile
+
+### V1.1
+
 - Alternative sign-in options
 - Ability to edit your profile and view other users’ profiles
 
